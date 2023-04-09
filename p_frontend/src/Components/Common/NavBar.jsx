@@ -1,4 +1,3 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,10 +8,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useContext } from 'react'
 import AuthContext from '../Context/AuthContext';
 import SideBar from './SideBar'
+import React, { useEffect, useState } from 'react'
 
-export default function ButtonAppBar() {
 
-    const {user, setUser} = useContext(AuthContext);
+export default function NavBar() {
+
+  const [Name, setName] = useState("")
+  const {user, setUser} = useContext(AuthContext);
+
+    useEffect(() => {
+      console.log("Renderizando NavBar:" );
+      setName(sessionStorage.getItem("userName"))
+    }, [])
+    
 
     const [state, setState] = React.useState({
         top: false,
@@ -33,23 +41,32 @@ export default function ButtonAppBar() {
     <Box sx={{ flexGrow: 1}}>
       <AppBar position="static" sx={{backgroundColor: '#F36C0E'}}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={toggleDrawer("left", true)}
-          >
+          {sessionStorage.getItem("userName") &&
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={toggleDrawer("left", true)}
+            >
             <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {user.name}
-          </Typography>
+            </IconButton>
+          }
+          {
+            sessionStorage.getItem("userName") &&
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Bienvenido, {user.name}
+                {/* Bienvenido, {sessionStorage.getItem("userName")} */}
+              </Typography>
+        }
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
-      <SideBar state={state} seState={setState} toggleDrawer={toggleDrawer}/>
+      {
+        sessionStorage.getItem("userName") &&
+        <SideBar state={state} seState={setState} toggleDrawer={toggleDrawer}/>
+      }
     </Box>
   );
 }

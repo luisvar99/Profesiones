@@ -32,20 +32,30 @@ export default function Login() {
                 username: Username,
                 password: Password
             })
-            if(result.data.success){
+            if(result.data.success) {
+              sessionStorage.setItem("userName", result.data.username)
+              setUser({name:sessionStorage.getItem("userName", result.data.username), rol: 1})
+              
+              if(result.data.rol===1){
+                sessionStorage.setItem("rol", 1)
+                navigate("/AdminPanel")
+              }else{
                 navigate("/Home")
+                sessionStorage.setItem("rol", 2)
+              }
             }else if(result.data.wrongUsername){
                 setErrorMessage("Usuario Invalido")
                 setWrongUsername(true)
-            }else if(result.data.wrongPassword){
+                setOpen(true)
+              }else if(result.data.wrongPassword){
                 setErrorMessage("Contrasena Invalida")
                 setWrongPassword(true)
+                setOpen(true)
             }else{
                 setErrorMessage("Ha ocurrido un error")
+                setOpen(true)
             }
-            setUser({name:"Luis", rol: 1})
-            setOpen(true)
-            
+
         } catch (error) {
             setErrorMessage("Ha ocurrido un error")
         }

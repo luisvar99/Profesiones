@@ -10,14 +10,25 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import {Link} from 'react-router-dom'
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import Url from "./Url"
 
 
 export default function TemporaryDrawer({state, seState, toggleDrawer}) {
 
-    const [Professions, setProfessions] = useState(['Electricistas', 'Plomeros', 'Tecnologia', 'Jardineros'])
+    const [Professions, setProfessions] = useState([])
 
+    const getProfessions = async () =>{
+      const result = await axios.get(Url+'getProfesiones')
+      setProfessions(result.data)
+      //console.log(result.data)
+    }
+
+  useEffect(() => {
+    getProfessions();
+  }, [])
+  
 
   const list = (anchor) => (
     <Box
@@ -27,14 +38,14 @@ export default function TemporaryDrawer({state, seState, toggleDrawer}) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {Professions.map((text, index) => (
-        <Link to='/Home' style={{textDecoration:"none", color: "black"}}>
-          <ListItem key={text} disablePadding >
+        {Professions.map((p, index) => (
+        <Link key={index} to='/Home' style={{textDecoration:"none", color: "black"}}>
+          <ListItem disablePadding >
             <ListItemButton sx={{textAlign: "center"}}>
               {/* <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon> */}
-              <ListItemText primary={text} />
+              <ListItemText primary={p.nombre} />
             </ListItemButton>
           </ListItem>
         </Link>
@@ -43,7 +54,7 @@ export default function TemporaryDrawer({state, seState, toggleDrawer}) {
       <Divider />
       <List>
         {['Mi cuenta'].map((text, index) => (
-          <ListItem key={text} disablePadding>
+          <ListItem key={index} disablePadding>
             <ListItemButton sx={{textAlign: "center"}}>
               {/* <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
@@ -53,6 +64,28 @@ export default function TemporaryDrawer({state, seState, toggleDrawer}) {
           </ListItem>
         ))}
       </List>
+
+      {
+        parseInt(sessionStorage.getItem("rol"))===1
+        &&
+        <>
+        <Divider />
+      <List>
+        {['Admin Panel'].map((text, index) => (
+          <Link key={index} to='/Home' style={{textDecoration:"none", color: "black"}}>
+            <ListItem disablePadding>
+              <ListItemButton sx={{textAlign: "center"}}>
+                {/* <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon> */}
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
+      </List>
+        </>
+      }
     </Box>
   );
 
