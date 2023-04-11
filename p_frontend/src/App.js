@@ -9,6 +9,7 @@ import NavBar from './Components/Common/NavBar';
 import Panel from './Components/Admin/Panel';
 import ManageProfessions from './Components/Admin/Profesions/ManageProfessions';
 import React, { useEffect, useState } from 'react'
+import ManageUsers from './Components/Admin/Users/ManageUsers';
 
 
 function App() {
@@ -27,6 +28,9 @@ function App() {
           </Routes> 
           <Routes>
             <Route path="/Admin/ManageProfessions" exact element={<ManageProfessions/>}/>      
+          </Routes> 
+          <Routes>
+            <Route path="/Admin/ManageUsers" exact element={<ManageUsers/>}/>      
           </Routes> 
       </BrowserRouter>
     </AuthProvider>

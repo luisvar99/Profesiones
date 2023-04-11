@@ -10,6 +10,18 @@ const getProfesiones = async (req, res) => {
     }
 } 
 
+const getProfesionById = async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM profesiones WHERE id = ($1)',[
+            req.params.id
+        ]);
+        console.log("getProfesionById : " + JSON.stringify(result.rows[0].nombre));
+        res.json(result.rows[0].nombre);
+    } catch (error) {
+        console.log(error.message);
+    }
+} 
+
 const getTotalNumberoOfProfesiones = async (req, res) => {
     try {
         const result = await db.query('SELECT COUNT(*) FROM profesiones');
@@ -32,4 +44,30 @@ const AddProfession = async (req, res) => {
     }
 } 
 
-module.exports = {getProfesiones, getTotalNumberoOfProfesiones, AddProfession}
+const UpdateProfession = async (req, res) => {
+    try {
+        const result = await db.query('UPDATE profesiones SET nombre = ($1) WHERE id = ($2)',[
+            req.body.nombre, req.body.id
+        ]);
+        res.json({success: true});
+    } catch (error) {
+        res.json({success: false});
+        console.log(error.message);
+    }
+} 
+
+const DeleteProfession = async (req, res) => {
+    try {
+        const result = await db.query('DELETE FROM profesiones WHERE id = ($1)',[
+            req.params.id
+        ]);
+        res.json({success: true});
+    } catch (error) {
+        res.json({success: false});
+        console.log(error.message);
+    }
+} 
+
+module.exports = {getProfesiones, getTotalNumberoOfProfesiones, 
+    AddProfession, getProfesionById, UpdateProfession, DeleteProfession
+}

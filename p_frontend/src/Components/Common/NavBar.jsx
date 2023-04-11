@@ -53,14 +53,12 @@ export default function NavBar() {
             <MenuIcon />
             </IconButton>
           }
-          {
-            sessionStorage.getItem("userName") &&
+          
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Bienvenido, {user.name}
-                {/* Bienvenido, {sessionStorage.getItem("userName")} */}
+                Bienvenido, {sessionStorage.getItem("userName")}
               </Typography>
-        }
-          <Button color="inherit">Login</Button>
+        
+          {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBar>
       {

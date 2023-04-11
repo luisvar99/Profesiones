@@ -20,20 +20,28 @@ import TextField from "@mui/material/TextField";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Modal from '@mui/material/Modal';
+import { fabClasses } from '@mui/material';
 
 
 export default function ManageProfessions() {
 
     const [Professions, setProfessions] = useState([])
     const [ProfessionName, setProfessionName] = useState("")
+    const [ProfessionId, setProfessionId] = useState(0)
     const [SuccessOpen, setSuccessOpen] = useState(false); 
     const [Message, setMessage] = useState(""); 
     const [Severity, setSeverity] = useState(""); 
-    const [ShowForm, setShowForm] = useState(false); 
+    const [ShowAddingForm, setShowAddingForm] = useState(false); 
+    const [ShowEditForm, setShowEditForm] = useState(false); 
+    const [ModalForm, setModalForm] = useState(false); 
 
     const [openModal, setOpenModal] = useState(false);
-    const handleOpenModal = () => setOpenModal(true);
+    const handleOpenModal = (id) => {
+        setProfessionId(id)
+        setOpenModal(true);
+    };
     const handleCloseModal = () => setOpenModal(false);
+    const handleCloseModalForm = () => setModalForm(false);
 
     const getProfessions = async () =>{
         const result = await axios.get(Url+'getProfesiones')
@@ -41,30 +49,87 @@ export default function ManageProfessions() {
         //console.log(result.data)
       }
 
-    const AddProfession = async (e) =>{
+    const AddOrEditProfession = async (e,profession_id) =>{
         e.preventDefault()
-        const result = await axios.post(Url+'AddProfesion',{
-            nombre: ProfessionName
-        })
-        if(result.data.success===true){
-            setMessage("Categoria agregada exitosamente")
-            setSeverity("success")
-            setSuccessOpen(true)
-            setProfessions([...Professions,{id: 1, nombre:ProfessionName}])
-        }else{
-            setMessage("Ha ocurrido un error Agregando la Categoria")
+        try {
+            if(ShowAddingForm){
+                const result = await axios.post(Url+'AddProfesion',{
+                    nombre: ProfessionName
+                })
+                if(result.data.success===true){
+                    setMessage("Categoria agregada exitosamente")
+                    setSeverity("success")
+                    setSuccessOpen(true)
+                    //setProfessions([...Professions,{nombre:ProfessionName}])
+                    window.location.reload()
+                }else{
+                    setMessage("Ha ocurrido un error Agregando la Categoria")
+                    setSeverity("error")
+                    setSuccessOpen(true)
+                }
+            }else if(ShowEditForm){
+                const result = await axios.put(Url + 'UpdateProfession',{
+                    nombre: ProfessionName,
+                    id: profession_id
+                })
+                if(result.data.success===true){
+                    setMessage("Categoria editada exitosamente")
+                    setSeverity("success")
+                    setSuccessOpen(true)
+                    window.location.reload()
+                }else{
+                    setMessage("Ha ocurrido un error editando la Categoria")
+                    setSeverity("error")
+                    setSuccessOpen(true)
+                }
+            }
+        }
+        catch (error) {
+            setMessage("Ha ocurrido un error editando la Categoria")
             setSeverity("error")
             setSuccessOpen(true)
         }
-        //console.log(result.data)
       }
 
-      const handleClose = (event, reason) => {
+    const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
-        setSuccessOpen(false);
-      };
+    setSuccessOpen(false);
+    };
+
+    const HandleEditButton = async (profession_id) => {
+        setShowEditForm(true) 
+        setShowAddingForm(false)
+        setModalForm(true)
+        setProfessionId(profession_id)
+        const result = await axios.get(Url + `getProfesionById/${profession_id}`)
+        setProfessionName(result.data)
+    }
+
+    const DeleteProfession = async (profession_id) => {
+        try {
+            const result = await axios.delete(Url + `deleteProfesion/${profession_id}`)
+            if(result.data.success===true){
+                setProfessions(Professions.filter(p=>p.id!==profession_id))
+                setMessage("Categoria eliminada exitosamente")
+                setSeverity("success")
+                setSuccessOpen(true)
+                setOpenModal(false)
+            }else{
+                setMessage("Ha ocurrido un error eliminando la categoria")
+                setSeverity("error")
+                setSuccessOpen(true)
+                setOpenModal(false)
+            }
+        } catch (error) {
+            setMessage("Ha ocurrido un error eliminando la categoria")
+            setSeverity("error")
+            setSuccessOpen(true)
+            setOpenModal(false)
+        }
+
+    }
   
       
 const Modalstyles = {
@@ -103,7 +168,7 @@ const Modalstyles = {
                     >
                         <TableCell align='center'>{row.nombre}</TableCell>
                         <TableCell align='center'>
-                            <div onClick={handleOpenModal}>
+                            <div onClick={()=>HandleEditButton(row.id)}>
                                 <ModeEditIcon 
                                     sx={{
                                         '&:hover': {
@@ -114,19 +179,22 @@ const Modalstyles = {
                             </div>
                         </TableCell>
                         <TableCell align='center'>
-                            <DeleteIcon sx={{
-                                            '&:hover': {
-                                                cursor: 'pointer',
-                                            }
+                            <div onClick={()=>handleOpenModal(row.id)}>
+                                <DeleteIcon 
+                                    sx={{
+                                        '&:hover': {
+                                            cursor: 'pointer',
+                                        }
                                         }}>
-                            </DeleteIcon>
+                                </DeleteIcon>
+                            </div>
                         </TableCell>
                     </TableRow>
                     ))}
                 </TableBody>
                 </Table>
             </TableContainer>
-            <div style={{height:"3rem"}} onClick={()=> setShowForm(true)}>
+            <div style={{height:"3rem"}} onClick={()=> {setModalForm(true); setShowAddingForm(true); setShowEditForm(false); setProfessionName("")}}>
                 <AddCircleIcon sx={{fontSize:'3rem', 
                                     marginLeft: "1rem", 
                                     color:"#F36C0E", 
@@ -137,14 +205,9 @@ const Modalstyles = {
                                     >
                 </AddCircleIcon>
             </div>
-            {ShowForm && 
+            
+{/*             {(ShowAddingForm || ShowEditForm) && 
                 <Container maxWidth="xs">
-                    <Snackbar open={SuccessOpen} autoHideDuration={6000} onClose={handleClose} 
-                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }} TransitionComponent="SlideTransition">
-                        <Alert onClose={handleClose} severity={Severity} sx={{ width: '100%' }}>
-                            {Message}
-                        </Alert>
-                    </Snackbar>
                     <Box
                         sx={{  
                         marginTop: 0,
@@ -156,21 +219,24 @@ const Modalstyles = {
                         borderRadius:'10px'
                         }}
                     >
-                    <Typography component="h1" variant="h5">
-                    Crear Categoria
+                    {ShowAddingForm && <Typography component="h1" variant="h5">
+                        Crear Categoria
                     </Typography>
-                    <Box component="form" onSubmit={AddProfession} sx={{ mt: 1}}>
+                    }
+                    {ShowEditForm && <Typography component="h1" variant="h5">
+                        Editar Categoria
+                    </Typography>
+                    }
+                    <Box component="form" onSubmit={(e)=>AddOrEditProfession(e, ProfessionId)} sx={{ mt: 1}}>
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        id="Nombre"
-                        label="Nombre"
-                        name="Nombre"
-                        autoComplete="Nombre"
+                        label={ShowAddingForm && "Nombre"}
                         autoFocus
-                        InputProps={{ sx: { borderRadius: 35 } }}
+                        InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                         onChange={(e) => setProfessionName(e.target.value)}
+                        value={ProfessionName}
                         />
                         <Button
                             type="submit"
@@ -187,20 +253,26 @@ const Modalstyles = {
                                 },
                             }}
                         >
-                            Aceptar
+                            {ShowAddingForm && "Aceptar"}  
+                            {ShowEditForm && "Guardar Cambios"}  
                         </Button>
                     </Box>
                 </Box>
-            </Container>}
+            </Container>} */}
         </div>
 
-
+        <Snackbar open={SuccessOpen} autoHideDuration={6000} onClose={handleClose} 
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }} TransitionComponent="SlideTransition">
+            <Alert onClose={handleClose} severity={Severity} sx={{ width: '100%' }}>
+                {Message}
+            </Alert>
+        </Snackbar>
         <Modal
-        open={openModal}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+            open={openModal}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
         <Box sx={Modalstyles}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Confirmación
@@ -223,7 +295,7 @@ const Modalstyles = {
                             color: 'white',
                         }
                     }}
-                    >
+                    onClick={()=>DeleteProfession(ProfessionId)}>
                     Aceptar
             </Button>
             <Button
@@ -245,6 +317,69 @@ const Modalstyles = {
             </Button>
           </div>
         </Box>
+      </Modal>
+
+
+      <Modal
+            open={ModalForm}
+            onClose={handleCloseModalForm}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            
+        >
+            <Container maxWidth="xs">
+                    <Box
+                        sx={{  
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        /* border:'#F36C0E 3px solid', */
+                        padding:'2rem',
+                        borderRadius:'10px',
+                        backgroundColor:"white",
+                        marginTop:"9rem"
+                        }}
+                    >
+                    {ShowAddingForm && <Typography component="h1" variant="h5">
+                        Crear Categoria
+                    </Typography>
+                    }
+                    {ShowEditForm && <Typography component="h1" variant="h5">
+                        Editar Categoria
+                    </Typography>
+                    }
+                    <Box component="form" onSubmit={(e)=>AddOrEditProfession(e, ProfessionId)} sx={{ mt: 1}}>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        label={ShowAddingForm && "Nombre"}
+                        autoFocus
+                        InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                        onChange={(e) => setProfessionName(e.target.value)}
+                        value={ProfessionName}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2, 
+                                borderRadius: 35,
+                                backgroundColor: "#F36C0E",
+                                padding: "8px",
+                                fontSize: "18px" ,
+                                ':hover': {
+                                    bgcolor: '#FF6900',
+                                    color: 'white',
+                                },
+                            }}
+                        >
+                            {ShowAddingForm && "Aceptar"}  
+                            {ShowEditForm && "Guardar Cambios"}  
+                        </Button>
+                    </Box>
+                </Box>
+            </Container>
       </Modal>
 
     </div>

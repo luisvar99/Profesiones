@@ -58,7 +58,7 @@ export default function Panel() {
         </Card>
 
         <Card sx={{ width:"80%" }}>
-          <Link>
+          <Link to="/Admin/ManageUsers">
             <CardContent>
               <Typography color="text.primary" gutterBottom>
                 Usuarios
