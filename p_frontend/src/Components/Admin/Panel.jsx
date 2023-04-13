@@ -17,15 +17,22 @@ import URL from '../Common/Url'
 export default function Panel() {
 
   const [NumberOfProfessions, setNumberOfProfessions] = useState(0)
+  const [NumberOfUsers, setNumberOfUsers] = useState(0)
 
-  const getTotalNumberoOfProfesiones = async () => {
+  const getTotalNumberOfProfesiones = async () => {
     const result = await axios.get(URL+'getTotalNumberoOfProfesiones');
     console.log("getTotalNumberoOfProfesiones:" + result.data);
     setNumberOfProfessions(result.data)
   }
+  const getTotalNumberOfUsers = async () => {
+    const result = await axios.get(URL+'getTotalNumberoOfUsers');
+    console.log("getTotalNumberoOfUsers:" + result.data);
+    setNumberOfUsers(result.data)
+  }
 
   useEffect(() => {
-    getTotalNumberoOfProfesiones();
+    getTotalNumberOfProfesiones();
+    getTotalNumberOfUsers();
   }, [])
   
 
@@ -64,7 +71,7 @@ export default function Panel() {
                 Usuarios
               </Typography>
               <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
-                Card
+                {NumberOfUsers}
               </Typography>
             </CardContent>
           </Link>

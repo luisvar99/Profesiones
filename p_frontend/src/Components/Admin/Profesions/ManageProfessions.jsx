@@ -30,7 +30,7 @@ export default function ManageProfessions() {
     const [ProfessionId, setProfessionId] = useState(0)
     const [SuccessOpen, setSuccessOpen] = useState(false); 
     const [Message, setMessage] = useState(""); 
-    const [Severity, setSeverity] = useState(""); 
+    const [Severity, setSeverity] = useState("success"); 
     const [ShowAddingForm, setShowAddingForm] = useState(false); 
     const [ShowEditForm, setShowEditForm] = useState(false); 
     const [ModalForm, setModalForm] = useState(false); 
@@ -206,59 +206,6 @@ const Modalstyles = {
                 </AddCircleIcon>
             </div>
             
-{/*             {(ShowAddingForm || ShowEditForm) && 
-                <Container maxWidth="xs">
-                    <Box
-                        sx={{  
-                        marginTop: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        border:'#F36C0E 3px solid',
-                        padding:'2rem',
-                        borderRadius:'10px'
-                        }}
-                    >
-                    {ShowAddingForm && <Typography component="h1" variant="h5">
-                        Crear Categoria
-                    </Typography>
-                    }
-                    {ShowEditForm && <Typography component="h1" variant="h5">
-                        Editar Categoria
-                    </Typography>
-                    }
-                    <Box component="form" onSubmit={(e)=>AddOrEditProfession(e, ProfessionId)} sx={{ mt: 1}}>
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        label={ShowAddingForm && "Nombre"}
-                        autoFocus
-                        InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                        onChange={(e) => setProfessionName(e.target.value)}
-                        value={ProfessionName}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2, 
-                                borderRadius: 35,
-                                backgroundColor: "#F36C0E",
-                                padding: "8px",
-                                fontSize: "18px" ,
-                                ':hover': {
-                                    bgcolor: '#FF6900',
-                                    color: 'white',
-                                },
-                            }}
-                        >
-                            {ShowAddingForm && "Aceptar"}  
-                            {ShowEditForm && "Guardar Cambios"}  
-                        </Button>
-                    </Box>
-                </Box>
-            </Container>} */}
         </div>
 
         <Snackbar open={SuccessOpen} autoHideDuration={6000} onClose={handleClose} 

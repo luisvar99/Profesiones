@@ -40,10 +40,11 @@ export default function ManageUsers() {
     const [UserRol, setUserRol] = useState("")
     const [SuccessOpen, setSuccessOpen] = useState(false); 
     const [Message, setMessage] = useState(""); 
-    const [Severity, setSeverity] = useState(""); 
+    const [Severity, setSeverity] = useState("success"); 
     const [ShowAddingForm, setShowAddingForm] = useState(false); 
     const [ShowEditForm, setShowEditForm] = useState(false); 
     const [ModalForm, setModalForm] = useState(false); 
+    const [SearchUser, setSearchUser] = useState(""); 
 
     const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = (id) => {
@@ -59,8 +60,9 @@ export default function ManageUsers() {
         //console.log(result.data)
     }
 
-    const SearchUser = async () =>{
-        const result = await axios.get(Url+'getUsers')
+    const SearchUserByInfo = async (e,SearchUser) =>{
+        e.preventDefault()
+        const result = await axios.get(Url+`getUserByInfo/${SearchUser}`)
         setUsers(result.data)
         //console.log(result.data)
     }
@@ -88,22 +90,30 @@ export default function ManageUsers() {
                     //setProfessions([...Professions,{nombre:ProfessionName}])
                     window.location.reload()
                 }else{
-                    setMessage("Ha ocurrido un error agregando la Usuario")
+                    setMessage("Ha ocurrido un error agregando al Usuario")
                     setSeverity("error")
                     setSuccessOpen(true)
                 }
             }else if(ShowEditForm){
-                const result = await axios.put(Url + 'UpdateProfession',{
-                    nombre: UserNames,
-                    id: user_id
+                const result = await axios.put(Url + 'EditUser',{
+                    id: UserId,
+                    nombres:UserNames,
+                    apellidos:UserLastNames,
+                    user:UserName,
+                    cedula:UserCedula, 
+                    telefono:UserTelf,
+                    email:UserEmail, 
+                    password:UserPassword, 
+                    direccion:UserAddress, 
+                    rol:UserRol
                 })
                 if(result.data.success===true){
-                    setMessage("Categoria editada exitosamente")
+                    setMessage("Usuario editado exitosamente")
                     setSeverity("success")
                     setSuccessOpen(true)
                     window.location.reload()
                 }else{
-                    setMessage("Ha ocurrido un error editando la Categoria")
+                    setMessage("Ha ocurrido un error editando al usuario")
                     setSeverity("error")
                     setSuccessOpen(true)
                 }
@@ -127,27 +137,37 @@ export default function ManageUsers() {
         setShowEditForm(true) 
         setShowAddingForm(false)
         setUserId(user_id)
-        const result = await axios.get(Url + `getProfesionById/${user_id}`)
-        setUserNames(result.data)
+        setModalForm(true)
+        const result = await axios.get(Url + `getUserById/${user_id}`)
+        console.log(result.data);
+        setUserNames(result.data[0].nombres)
+        setUserLastNames(result.data[0].apellidos)
+        setUserName(result.data[0].user)
+        setUserCedula(result.data[0].cedula)
+        setUserTelf(result.data[0].telefono)
+        setUserEmail(result.data[0].email)
+        setUserPassword(result.data[0].password)
+        setUserAddress(result.data[0].direccion)
+        setUserRol(result.data[0].rol)
     }
 
     const DeleteUser = async (user_id) => {
         try {
-            const result = await axios.delete(Url + `deleteProfesion/${user_id}`)
+            const result = await axios.delete(Url + `DeleteUser/${user_id}`)
             if(result.data.success===true){
                 setUsers(Users.filter(p=>p.id!==user_id))
-                setMessage("Categoria eliminada exitosamente")
+                setMessage("Usuario eliminado exitosamente")
                 setSeverity("success")
                 setSuccessOpen(true)
                 setOpenModal(false)
             }else{
-                setMessage("Ha ocurrido un error eliminando la categoria")
+                setMessage("Ha ocurrido un error eliminando al usuario")
                 setSeverity("error")
                 setSuccessOpen(true)
                 setOpenModal(false)
             }
         } catch (error) {
-            setMessage("Ha ocurrido un error eliminando la categoria")
+            setMessage("Ha ocurrido un error eliminando al usuario")
             setSeverity("error")
             setSuccessOpen(true)
             setOpenModal(false)
@@ -179,12 +199,12 @@ const Modalstyles = {
             <TextField
                 margin="normal"
                 required
-                label={ShowAddingForm && "Nombre"}
+                label="Cedula"
                 autoFocus
                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"0.5rem"} }}
-                onChange={(e) => setUserNames(e.target.value)}
-                value={UserNames}
+                onChange={(e) => setSearchUser(e.target.value)}
                 sx={{marginLeft:"2rem"}}
+                type='number'
                 />
             <Button
                 type="submit"
@@ -200,7 +220,7 @@ const Modalstyles = {
                     },
                     display:"inline"
                 }}
-                onClick={()=>SearchUser(UserId)}>
+                onClick={(e)=>SearchUserByInfo(e,SearchUser)}>
                 Aceptar
             </Button>   
         </Box>
@@ -366,7 +386,7 @@ const Modalstyles = {
                                 margin="normal"
                                 required
                                 fullWidth
-                                label={ShowAddingForm && "Nombres"}
+                                label="Nombres"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserNames(e.target.value)}
@@ -388,7 +408,7 @@ const Modalstyles = {
                                 margin="normal"
                                 required
                                 fullWidth
-                                label={ShowAddingForm && "Usuario"}
+                                label="Usuario"
                                 disabled={ShowEditForm}
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
@@ -400,7 +420,7 @@ const Modalstyles = {
                                 margin="normal"
                                 required
                                 fullWidth
-                                label={ShowAddingForm && "Usuario"}
+                                label="Contrasena"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserPassword(e.target.value)}
@@ -432,7 +452,7 @@ const Modalstyles = {
                                 margin="normal"
                                 required
                                 fullWidth
-                                label={ShowAddingForm && "Cedula"}
+                                label="Cedula"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserCedula(e.target.value)}
@@ -443,7 +463,7 @@ const Modalstyles = {
                                 margin="normal"
                                 required
                                 fullWidth
-                                label={ShowAddingForm && "Telefono"}
+                                label="Telefono"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserTelf(e.target.value)}
@@ -455,7 +475,7 @@ const Modalstyles = {
                                 margin="normal"
                                 required
                                 fullWidth
-                                label={ShowAddingForm && "Correo"}
+                                label="Correo"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserEmail(e.target.value)}
@@ -469,7 +489,7 @@ const Modalstyles = {
                                 fullWidth
                                 multiline
                                 rows="4"
-                                label={ShowAddingForm && "Direccion"}
+                                label="Direccion"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserAddress(e.target.value)}
