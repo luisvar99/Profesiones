@@ -1,8 +1,12 @@
 const {db} = require('../database');
 
-const getUsers = async (req, res) => {
+const getWorkers = async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM users');
+        const result = await db.query(`select CONCAT(u.nombres, '', u.apellidos) AS nombre_completo, 
+        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion 
+        from trabajadores t
+        INNER JOIN users u ON u.id = t.id_user
+        INNER JOIN profesiones p ON p.id = t.id_profesion`);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
     } catch (error) {
@@ -48,33 +52,8 @@ const EditUser = async (req, res) => {
     }
 }
 
-const AddUser = async (req, res) => {
-    try {
-        const result = await db.query(`INSERT INTO users (nombres, apellidos, cedula, telefono, email, rol, "user", password, direccion) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,[
-            req.body.nombres, req.body.apellidos, req.body.cedula, req.body.telefono, 
-            req.body.email, req.body.rol, req.body.user, req.body.password, 
-            req.body.direccion
-        ]);
-        if(req.body.rol===3){
-            const resulttwo = await db.query(`SELECT id FROM users ORDER BY id desc limit 1`)
-            console.log(resulttwo.rows[0]);
-            const id_user = resulttwo.rows[0].id
-            
-            const resultthree = await db.query(`INSERT INTO trabajadores (id_user, id_profesion, descripcion, zonas) 
-        VALUES ($1, $2, $3, $4)`,[
-            id_user, req.body.id_profesion, req.body.descripcion, req.body.zonas
-            ])
-        }
-        //console.log("AddUser : " + JSON.stringify(result.rows));
-        res.json({success: true});
-    } catch (error) {
-        res.json({success: false});
-        console.log(error.message);
-    }
-}
 
-const DeleteUser = async (req, res) => {
+const DeleteWorker = async (req, res) => {
     try {
         const result = await db.query('DELETE FROM users WHERE id=($1)',[
             req.params.id
@@ -86,10 +65,10 @@ const DeleteUser = async (req, res) => {
     }
 } 
 
-const getTotalNumberoOfUsers = async (req, res) => {
+const getTotalNumberoOfWorkers = async (req, res) => {
     try {
-        const result = await db.query('SELECT COUNT(*) FROM users');
-        //console.log("getTotalNumberoOfUsers : " + JSON.stringify(result.rows[0].count));
+        const result = await db.query('SELECT COUNT(*) FROM users WHERE rol=3');
+        //console.log("getTotalNumberoOfWorkers : " + JSON.stringify(result.rows[0].count));
         res.json(result.rows[0].count);
     } catch (error) {
         res.json({success:false});
@@ -97,5 +76,5 @@ const getTotalNumberoOfUsers = async (req, res) => {
     }
 } 
 
-module.exports = {getUsers, AddUser, getTotalNumberoOfUsers, getUserById, 
-    EditUser, DeleteUser, getUserByInfo}
+module.exports = {getWorkers, getTotalNumberoOfWorkers, getUserById, 
+    EditUser, DeleteWorker, getUserByInfo}

@@ -10,6 +10,7 @@ import Panel from './Components/Admin/Panel';
 import ManageProfessions from './Components/Admin/Profesions/ManageProfessions';
 import React, { useEffect, useState } from 'react'
 import ManageUsers from './Components/Admin/Users/ManageUsers';
+import ManageWorkers from './Components/Admin/Workers/ManageWorkers';
 
 
 function App() {
@@ -31,6 +32,9 @@ function App() {
           </Routes> 
           <Routes>
             <Route path="/Admin/ManageUsers" exact element={<ManageUsers/>}/>      
+          </Routes> 
+          <Routes>
+            <Route path="/Admin/ManageWorkers" exact element={<ManageWorkers/>}/>      
           </Routes> 
       </BrowserRouter>
     </AuthProvider>

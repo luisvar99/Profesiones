@@ -15,7 +15,7 @@ const getProfesionById = async (req, res) => {
         const result = await db.query('SELECT * FROM profesiones WHERE id = ($1)',[
             req.params.id
         ]);
-        console.log("getProfesionById : " + JSON.stringify(result.rows[0].nombre));
+        //console.log("getProfesionById : " + JSON.stringify(result.rows[0].nombre));
         res.json(result.rows[0].nombre);
     } catch (error) {
         console.log(error.message);
@@ -25,7 +25,7 @@ const getProfesionById = async (req, res) => {
 const getTotalNumberoOfProfesiones = async (req, res) => {
     try {
         const result = await db.query('SELECT COUNT(*) FROM profesiones');
-        console.log("getTotalNumberoOfProfesiones : " + JSON.stringify(result.rows[0].count));
+        //console.log("getTotalNumberoOfProfesiones : " + JSON.stringify(result.rows[0].count));
         res.json(result.rows[0].count);
     } catch (error) {
         console.log(error.message);

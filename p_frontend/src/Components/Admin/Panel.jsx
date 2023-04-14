@@ -18,6 +18,7 @@ export default function Panel() {
 
   const [NumberOfProfessions, setNumberOfProfessions] = useState(0)
   const [NumberOfUsers, setNumberOfUsers] = useState(0)
+  const [NumberOfWorkers, setNumberOfWorkers] = useState(0)
 
   const getTotalNumberOfProfesiones = async () => {
     const result = await axios.get(URL+'getTotalNumberoOfProfesiones');
@@ -29,10 +30,16 @@ export default function Panel() {
     console.log("getTotalNumberoOfUsers:" + result.data);
     setNumberOfUsers(result.data)
   }
+  const getTotalNumberOfWorkers = async () => {
+    const result = await axios.get(URL+'getTotalNumberOfWorkers');
+    console.log("getTotalNumberOfWorkers:" + result.data);
+    setNumberOfWorkers(result.data)
+  }
 
   useEffect(() => {
     getTotalNumberOfProfesiones();
     getTotalNumberOfUsers();
+    getTotalNumberOfWorkers();
   }, [])
   
 
@@ -78,13 +85,13 @@ export default function Panel() {
         </Card>
 
         <Card sx={{ width:"80%" }}>
-          <Link>
+          <Link to='/Admin/ManageWorkers'>
             <CardContent>
               <Typography color="text.primary" gutterBottom>
                 Trabajadores
               </Typography>
               <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
-                Card
+                {NumberOfWorkers}
               </Typography>
             </CardContent>
           </Link>

@@ -27,6 +27,7 @@ import Select from '@mui/material/Select';
 
 export default function ManageUsers() {
 
+    const [Professions, setProfessions] = useState([])
     const [Users, setUsers] = useState([])
     const [UserId, setUserId] = useState(0)
     const [UserNames, setUserNames] = useState("")
@@ -38,6 +39,9 @@ export default function ManageUsers() {
     const [UserPassword, setUserPassword] = useState("")
     const [UserAddress, setUserAddress] = useState("")
     const [UserRol, setUserRol] = useState("")
+    const [WorkerDescription, setWorkerDescription] = useState("")
+    const [WorkerZones, setWorkerZones] = useState("")
+    const [WorkerProfession, setWorkerProfession] = useState(0)
     const [SuccessOpen, setSuccessOpen] = useState(false); 
     const [Message, setMessage] = useState(""); 
     const [Severity, setSeverity] = useState("success"); 
@@ -81,7 +85,10 @@ export default function ManageUsers() {
                     rol:UserRol,
                     user:UserName,
                     password: UserPassword,
-                    direccion: UserAddress
+                    direccion: UserAddress,
+                    id_profesion: WorkerProfession,
+                    descripcion: WorkerDescription,
+                    zonas: WorkerZones
                 })
                 if(result.data.success===true){
                     setMessage("Usuario agregado exitosamente")
@@ -105,7 +112,9 @@ export default function ManageUsers() {
                     email:UserEmail, 
                     password:UserPassword, 
                     direccion:UserAddress, 
-                    rol:UserRol
+                    rol:UserRol,
+                    descripcion: WorkerDescription,
+                    zonas: WorkerZones
                 })
                 if(result.data.success===true){
                     setMessage("Usuario editado exitosamente")
@@ -174,6 +183,12 @@ export default function ManageUsers() {
         }
 
     }
+
+    const getProfessions = async () =>{
+        const result = await axios.get(Url+'getProfesiones')
+        setProfessions(result.data)
+        //console.log(result.data)
+      }
   
       
 const Modalstyles = {
@@ -190,6 +205,7 @@ const Modalstyles = {
   
     useEffect(() => {
       GetUsers();
+      getProfessions()
     }, [])
 
 
@@ -366,7 +382,7 @@ const Modalstyles = {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    padding:'2rem',
+                    padding:'1rem 2rem',
                     borderRadius:'10px',
                     backgroundColor:"white",
                     width:"100%"
@@ -388,21 +404,21 @@ const Modalstyles = {
                                 fullWidth
                                 label="Nombres"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"}}}
                                 onChange={(e) => setUserNames(e.target.value)}
                                 value={UserNames}
-                                sx={{width:"95%"}}
+                                sx={{width:"95%", mt:0.5}}
                             />
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                label={ShowAddingForm && "Apellidos"}
+                                label="Apellidos"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserLastNames(e.target.value)}
                                 value={UserLastNames}
-                                sx={{width:"95%"}}
+                                sx={{width:"95%" , mt:0.5}}
                             />
                             <TextField
                                 margin="normal"
@@ -414,7 +430,7 @@ const Modalstyles = {
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserName(e.target.value)}
                                 value={UserName}
-                                sx={{width:"95%"}}
+                                sx={{width:"95%" , mt:0.5}}
                             />
                             <TextField
                                 margin="normal"
@@ -425,12 +441,12 @@ const Modalstyles = {
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserPassword(e.target.value)}
                                 value={UserPassword}
-                                sx={{width:"95%"}}
+                                sx={{width:"95%" , mt:0.5}}
                             />
                             <FormControl fullWidth sx={{maxWidth:"95%"}}>
                                 <InputLabel 
                                     id="demo-simple-select-label"
-                                    sx={{width:"95%", borderRadius: 35, mt:"16px", mb:"8px"}}>'
+                                    sx={{width:"95%", borderRadius: 35, mt:0.5, mb:"8px"}}>'
                                     Rol
                                 </InputLabel>
                                 <Select
@@ -439,13 +455,28 @@ const Modalstyles = {
                                 value={UserRol}
                                 label="Rol"
                                 onChange={(e) => setUserRol(e.target.value)}
-                                sx={{borderRadius: 35, mt:"16px", mb:"8px",
+                                sx={{borderRadius: 35 , mt:0.5, mb:"8px",
                                     }}
                                 >
                                 <MenuItem value={1}>Administrador</MenuItem>
                                 <MenuItem value={2}>Usuario Regular</MenuItem>
+                                <MenuItem value={3}>Trabajador</MenuItem>
                                 </Select>
                             </FormControl>
+                             {UserRol===3 &&
+                             <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="Descripcion"
+                                multiline
+                                rows="4"
+                                autoFocus
+                                InputProps={{ sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
+                                onChange={(e) => setWorkerDescription(e.target.value)}
+                                value={WorkerDescription}
+                                sx={{width:"95%" , mt:0.5}}
+                            />}
                         </Box>
                         <Box>
                             <TextField
@@ -457,7 +488,7 @@ const Modalstyles = {
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserCedula(e.target.value)}
                                 value={UserCedula}
-                                sx={{width:"95%"}}
+                                sx={{width:"95%" , mt:0.5}}
                             />
                             <TextField
                                 margin="normal"
@@ -469,7 +500,7 @@ const Modalstyles = {
                                 onChange={(e) => setUserTelf(e.target.value)}
                                 value={UserTelf}
                                 type='number'
-                                sx={{width:"95%"}}
+                                sx={{width:"95%" , mt:0.5}}
                             />
                             <TextField
                                 margin="normal"
@@ -481,7 +512,7 @@ const Modalstyles = {
                                 onChange={(e) => setUserEmail(e.target.value)}
                                 value={UserEmail}
                                 type='email'
-                                sx={{width:"95%"}}
+                                sx={{width:"95%" , mt:0.5}}
                             />
                             <TextField
                                 margin="normal"
@@ -495,15 +526,53 @@ const Modalstyles = {
                                 onChange={(e) => setUserAddress(e.target.value)}
                                 value={UserAddress}
                                 type='email'
-                                sx={{width:"95%"}}
+                                sx={{width:"95%" , mt:0.5}}
                             />
+                            {UserRol===3 &&
+                            <React.Fragment>
+
+                                <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="Zonas de trabajo"
+                                autoFocus
+                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                onChange={(e) => setWorkerZones(e.target.value)}
+                                value={WorkerZones}
+                                sx={{width:"95%" , mt:0.5}}
+                                />
+                            <FormControl fullWidth sx={{maxWidth:"95%" , mt:0.5}}>
+                                <InputLabel 
+                                    id="demo-simple-select-label"
+                                    sx={{width:"95%", borderRadius: 35, mt:0.5}}>'
+                                    Categoria
+                                </InputLabel>
+                                <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={WorkerProfession}
+                                label="Profesion"
+                                onChange={(e) => setWorkerProfession(e.target.value)}
+                                sx={{borderRadius: 35 , mt:0.5, mb:"6px",
+                                    }}
+                                >{
+                                    Professions.map((p,index)=>(
+                                        <MenuItem key={index} value={p.id}>{p.nombre}</MenuItem>
+                                    ))
+                                }
+                                </Select>
+                            </FormControl>
+                                
+                            </React.Fragment>
+                            }
                         </Box>
                     </Box>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2, 
+                            sx={{ mt: 1, mb: 1, 
                                 borderRadius: 35,
                                 backgroundColor: "#F36C0E",
                                 padding: "8px",

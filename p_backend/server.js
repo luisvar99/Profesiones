@@ -3,6 +3,7 @@ const cors = require('cors');
 const UsersRoute = require('./Routes/users')
 const AuthRoute = require('./Routes/Auth')
 const ProfesionesRoute = require('./Routes/Profesiones')
+const WorkersRoute = require('./Routes/Workers')
 
 require('dotenv').config();
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false}));
 app.use(UsersRoute)
 app.use(AuthRoute)
 app.use(ProfesionesRoute)
+app.use(WorkersRoute)
 
 const PORT = process.env.PORT || 4000
 app.listen(PORT, (req, res) => {
