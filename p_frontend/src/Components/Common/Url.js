@@ -1,3 +1,1 @@
-export const URL = "http://localhost:4000/";
-
-export default URL;
+export const Url = "http://localhost:4000/";

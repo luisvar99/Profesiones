@@ -12,7 +12,7 @@ import {useNavigate} from 'react-router-dom'
 import React, { useContext, useState } from 'react'
 import AuthContext from '../Context/AuthContext';
 import axios from "axios"
-import URL from '../Common/Url'
+import {Url} from '../Common/Url'
 
 export default function Login() {
     const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function Login() {
     const Login = async (event) => {
         event.preventDefault();
         try {
-            const result = await axios.post(URL+"login",{
+            const result = await axios.post(Url+"login",{
                 username: Username,
                 password: Password
             })

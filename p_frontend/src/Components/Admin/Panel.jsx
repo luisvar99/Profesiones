@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {Link} from 'react-router-dom'
 import axios from 'axios'
-import URL from '../Common/Url'
+import {Url} from '../Common/Url'
 
 export default function Panel() {
 
@@ -21,17 +21,17 @@ export default function Panel() {
   const [NumberOfWorkers, setNumberOfWorkers] = useState(0)
 
   const getTotalNumberOfProfesiones = async () => {
-    const result = await axios.get(URL+'getTotalNumberoOfProfesiones');
+    const result = await axios.get(Url+'getTotalNumberoOfProfesiones');
     console.log("getTotalNumberoOfProfesiones:" + result.data);
     setNumberOfProfessions(result.data)
   }
   const getTotalNumberOfUsers = async () => {
-    const result = await axios.get(URL+'getTotalNumberoOfUsers');
+    const result = await axios.get(Url+'getTotalNumberoOfUsers');
     console.log("getTotalNumberoOfUsers:" + result.data);
     setNumberOfUsers(result.data)
   }
   const getTotalNumberOfWorkers = async () => {
-    const result = await axios.get(URL+'getTotalNumberOfWorkers');
+    const result = await axios.get(Url+'getTotalNumberOfWorkers');
     console.log("getTotalNumberOfWorkers:" + result.data);
     setNumberOfWorkers(result.data)
   }

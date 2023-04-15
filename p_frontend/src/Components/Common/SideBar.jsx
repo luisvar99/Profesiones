@@ -12,7 +12,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import {Link} from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import Url from "./Url"
+import {Url} from "./Url"
 
 
 export default function TemporaryDrawer({state, seState, toggleDrawer}) {
@@ -38,6 +38,17 @@ export default function TemporaryDrawer({state, seState, toggleDrawer}) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
+        <Link to='/Home' style={{textDecoration:"none", color: "black"}}>
+          <ListItem disablePadding >
+              <ListItemButton sx={{textAlign: "center"}}>
+                {/* <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon> */}
+              <ListItemText primary="Home" />
+              </ListItemButton>
+          </ListItem>
+        </Link>
+        <Divider />
         {Professions.map((p, index) => (
         <Link key={index} to='/Home' style={{textDecoration:"none", color: "black"}}>
           <ListItem disablePadding >

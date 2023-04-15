@@ -4,7 +4,7 @@ import {BrowserRouter,
   Route} 
   from 'react-router-dom'
 import {AuthProvider} from './Components/Context/AuthContext';
-import Home from './Components/Home';
+import Home from './Components/Common/Home';
 import NavBar from './Components/Common/NavBar';
 import Panel from './Components/Admin/Panel';
 import ManageProfessions from './Components/Admin/Profesions/ManageProfessions';

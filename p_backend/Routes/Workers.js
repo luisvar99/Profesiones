@@ -1,16 +1,16 @@
 const {Router} = require('express')
-const {getWorkers, getTotalNumberoOfWorkers, getUserById, EditUser, 
-    DeleteWorker, getUserByInfo
+const {getWorkers, getTotalNumberoOfWorkers, getWorkerById, EditWorker, 
+    DeleteWorker, getWorkerByInfo
 } = require('../Controllers/Workers')
 
 const router = new Router();
 
 router.get('/getWorkers', getWorkers)
-router.get('/getUserById/:id', getUserById)
-router.get('/getUserByInfo/:cedula', getUserByInfo)
+router.get('/getWorkerById/:id_usuario/:id_profesion', getWorkerById)
+router.get('/getWorkerByInfo/:cedula', getWorkerByInfo)
 router.get('/getTotalNumberOfWorkers', getTotalNumberoOfWorkers)
 
-router.put('/EditUser', EditUser)
-router.delete('/DeleteUser/:id', DeleteWorker)
+router.put('/EditWorker', EditWorker)
+router.delete('/DeleteWorker/:id_usuario/:id_profesion', DeleteWorker)
 
 module.exports = router;

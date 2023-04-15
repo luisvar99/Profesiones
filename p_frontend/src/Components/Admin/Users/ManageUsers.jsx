@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
-import Url from '../../Common/Url';
+import {Url} from '../../Common/Url';
 import '../../Styles/ManageProfessions.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -56,7 +56,18 @@ export default function ManageUsers() {
         setOpenModal(true);
     };
     const handleCloseModal = () => setOpenModal(false);
-    const handleCloseModalForm = () => setModalForm(false);
+    const handleCloseModalForm = () => {
+        setUserNames("")
+        setUserLastNames("")
+        setUserName("")
+        setUserCedula("")
+        setUserTelf("")
+        setUserEmail("")
+        setUserPassword("")
+        setUserAddress("")
+        setUserRol("")
+        setModalForm(false)
+    };
 
     const GetUsers = async () =>{
         const result = await axios.get(Url+'getUsers')
@@ -139,7 +150,16 @@ export default function ManageUsers() {
         if (reason === 'clickaway') {
             return;
         }
-    setSuccessOpen(false);
+        setUserNames("")
+        setUserLastNames("")
+        setUserName("")
+        setUserCedula("")
+        setUserTelf("")
+        setUserEmail("")
+        setUserPassword("")
+        setUserAddress("")
+        setUserRol("")
+        setSuccessOpen(false);
     };
 
     const HandleEditButton = async (user_id) => {
@@ -181,7 +201,15 @@ export default function ManageUsers() {
             setSuccessOpen(true)
             setOpenModal(false)
         }
-
+        setUserNames("")
+        setUserLastNames("")
+        setUserName("")
+        setUserCedula("")
+        setUserTelf("")
+        setUserEmail("")
+        setUserPassword("")
+        setUserAddress("")
+        setUserRol("")
     }
 
     const getProfessions = async () =>{
@@ -191,17 +219,17 @@ export default function ManageUsers() {
       }
   
       
-const Modalstyles = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
+    const Modalstyles = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
   
     useEffect(() => {
       GetUsers();
@@ -211,7 +239,7 @@ const Modalstyles = {
 
   return (
     <div className="manageProfessionsMainContainer">
-        <Box component="form" onSubmit={(e)=>SearchUser(e, UserId)} sx={{ mt: 1, display:"flex", alignItems:"center"}}>
+        <Box component="form" onSubmit={(e)=>SearchUserByInfo(e, UserId)} sx={{ mt: 1, display:"flex", alignItems:"center"}}>
             <TextField
                 margin="normal"
                 required
@@ -463,10 +491,11 @@ const Modalstyles = {
                                 <MenuItem value={3}>Trabajador</MenuItem>
                                 </Select>
                             </FormControl>
-                             {UserRol===3 &&
+                             {(UserRol===3 && ShowAddingForm) &&
                              <TextField
                                 margin="normal"
                                 required
+                                disabled={ShowEditForm}
                                 fullWidth
                                 label="Descripcion"
                                 multiline
@@ -528,13 +557,14 @@ const Modalstyles = {
                                 type='email'
                                 sx={{width:"95%" , mt:0.5}}
                             />
-                            {UserRol===3 &&
+                            {(UserRol===3 && ShowAddingForm) &&
                             <React.Fragment>
 
                                 <TextField
                                 margin="normal"
                                 required
                                 fullWidth
+                                disabled={ShowEditForm}
                                 label="Zonas de trabajo"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
@@ -551,12 +581,13 @@ const Modalstyles = {
                                 <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
+                                disabled={ShowEditForm}
                                 value={WorkerProfession}
                                 label="Profesion"
                                 onChange={(e) => setWorkerProfession(e.target.value)}
-                                sx={{borderRadius: 35 , mt:0.5, mb:"6px",
-                                    }}
-                                >{
+                                sx={{borderRadius: 35 , mt:0.5, mb:"6px"}}
+                                >
+                                {
                                     Professions.map((p,index)=>(
                                         <MenuItem key={index} value={p.id}>{p.nombre}</MenuItem>
                                     ))

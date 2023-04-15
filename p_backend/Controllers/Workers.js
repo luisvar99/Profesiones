@@ -2,8 +2,8 @@ const {db} = require('../database');
 
 const getWorkers = async (req, res) => {
     try {
-        const result = await db.query(`select CONCAT(u.nombres, '', u.apellidos) AS nombre_completo, 
-        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion 
+        const result = await db.query(`select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
+        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_user, t.id_profesion
         from trabajadores t
         INNER JOIN users u ON u.id = t.id_user
         INNER JOIN profesiones p ON p.id = t.id_profesion`);
@@ -14,10 +14,15 @@ const getWorkers = async (req, res) => {
     }
 } 
 
-const getUserById = async (req, res) => {
+const getWorkerById = async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM users WHERE id = ($1)',
-        [req.params.id]);
+        const result = await db.query(`select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
+        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_profesion
+        from trabajadores t
+        INNER JOIN users u ON u.id = t.id_user
+        INNER JOIN profesiones p ON p.id = t.id_profesion
+        WHERE t.id_user = ($1) AND t.id_profesion = ($2)`,
+        [req.params.id_usuario, req.params.id_profesion]);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
     } catch (error) {
@@ -25,10 +30,14 @@ const getUserById = async (req, res) => {
     }
 } 
 
-const getUserByInfo = async (req, res) => {
+const getWorkerByInfo = async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM users WHERE cedula = ($1)',
-        [req.params.cedula]);
+        const result = await db.query(`select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
+        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_profesion
+        from trabajadores t
+        INNER JOIN users u ON u.id = t.id_user
+        INNER JOIN profesiones p ON p.id = t.id_profesion
+        WHERE u.cedula = ($1)`,[req.params.cedula]);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
     } catch (error) {
@@ -36,13 +45,12 @@ const getUserByInfo = async (req, res) => {
     }
 } 
 
-const EditUser = async (req, res) => {
+const EditWorker = async (req, res) => {
+    console.log("EditWorker: " + JSON.stringify(req.body));
     try {
-        const result = await db.query(`UPDATE users SET nombres=($1), apellidos=($2), cedula=($3), telefono=($4), 
-        email=($5), rol=($6), "user"=($7), password=($8), direccion=($9) WHERE id = ($10)`,[
-            req.body.nombres, req.body.apellidos, req.body.cedula, req.body.telefono, 
-            req.body.email, req.body.rol, req.body.user, req.body.password, 
-            req.body.direccion, req.body.id
+        const result = await db.query(`UPDATE trabajadores SET descripcion=($1), zonas=($2), id_profesion = ($3)
+        WHERE id_user = ($4) AND id_profesion = ($5)`,[
+            req.body.descripcion, req.body.zonas, req.body.id_profesion ,req.body.id_usuario, req.body.last_id_profesion
         ]);
         //console.log("AddUser : " + JSON.stringify(result.rows));
         res.json({success: true});
@@ -54,9 +62,13 @@ const EditUser = async (req, res) => {
 
 
 const DeleteWorker = async (req, res) => {
+    console.log("Delete Worker: " + JSON.stringify(req.params));
     try {
-        const result = await db.query('DELETE FROM users WHERE id=($1)',[
-            req.params.id
+        const result = await db.query('DELETE FROM trabajadores WHERE id_user=($1) AND id_profesion=($2)',[
+            req.params.id_usuario, req.params.id_profesion
+        ]);
+        const resultTwo = await db.query('DELETE FROM users WHERE id=($1)',[
+            req.params.id_usuario
         ]);
         res.json({success:true});
     } catch (error) {
@@ -76,5 +88,5 @@ const getTotalNumberoOfWorkers = async (req, res) => {
     }
 } 
 
-module.exports = {getWorkers, getTotalNumberoOfWorkers, getUserById, 
-    EditUser, DeleteWorker, getUserByInfo}
+module.exports = {getWorkers, getTotalNumberoOfWorkers, getWorkerById, 
+    EditWorker, DeleteWorker, getWorkerByInfo}

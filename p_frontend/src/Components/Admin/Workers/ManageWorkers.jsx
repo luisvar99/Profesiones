@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
-import Url from '../../Common/Url';
+import {Url} from '../../Common/Url';
 import '../../Styles/ManageProfessions.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -29,85 +29,151 @@ export default function ManageWorkers() {
 
     const [Professions, setProfessions] = useState([])
     const [Workers, setWorkers] = useState([])
-    const [UserId, setUserId] = useState(0)
-    const [UserNames, setUserNames] = useState("")
-    const [UserLastNames, setUserLastNames] = useState("")
-    const [UserName, setUserName] = useState("")
-    const [UserCedula, setUserCedula] = useState(0)
-    const [UserTelf, setUserTelf] = useState("")
-    const [UserEmail, setUserEmail] = useState("")
-    const [UserPassword, setUserPassword] = useState("")
-    const [UserAddress, setUserAddress] = useState("")
-    const [UserRol, setUserRol] = useState("")
-    const [WorkerDescription, setWorkerDescription] = useState("")
+    const [WorkerUserId, setWorkerUserId] = useState(0)
+    const [WorkerProfessionId, setWorkerProfessionId] = useState(0)
+    const [WorkerLastProfessionId, setWorkerLastProfessionId] = useState(0)
+    const [WorkerName, setWorkerName] = useState("")
+    const [WorkerCedula, setUserCedula] = useState(0)
+    const [WorkerTelf, setUserTelf] = useState("")
     const [WorkerZones, setWorkerZones] = useState("")
     const [WorkerProfession, setWorkerProfession] = useState(0)
+    const [WorkerDescription, setWorkerDescription] = useState(0)
     const [SuccessOpen, setSuccessOpen] = useState(false); 
     const [Message, setMessage] = useState(""); 
     const [Severity, setSeverity] = useState("success"); 
-    const [ShowAddingForm, setShowAddingForm] = useState(false); 
-    const [ShowEditForm, setShowEditForm] = useState(false); 
     const [ModalForm, setModalForm] = useState(false); 
-    const [SearchUser, setSearchUser] = useState(""); 
+    const [SearchWorker, setSearchWorker] = useState(""); 
 
     const [openModal, setOpenModal] = useState(false);
-    const handleOpenModal = (id) => {
-        setUserId(id)
+
+    const handleOpenModal = (id_usuario, id_profesion) => {
+        setWorkerUserId(id_usuario)
+        setWorkerLastProfessionId(id_profesion)
         setOpenModal(true);
     };
     const handleCloseModal = () => setOpenModal(false);
     const handleCloseModalForm = () => setModalForm(false);
 
-    const EditWorker = async () => {
-
+    const EditWorker = async (id_profesion) => {
+        try {
+            const result = await axios.put(Url + 'EditWorker',{
+                id_usuario: WorkerUserId,
+                last_id_profesion: WorkerLastProfessionId,
+                id_profesion:WorkerProfessionId,
+                descripcion: WorkerDescription,
+                zonas: WorkerZones
+            })
+            if(result.data.success===true){
+                setMessage("Trabajador editado exitosamente")
+                setSeverity("success")
+                setSuccessOpen(true)
+                window.location.reload()
+            }else{
+                setMessage("Ha ocurrido un error editando al trabajador")
+                setSeverity("success")
+                setSuccessOpen(true)
+            }
+        } catch (error) {
+            setMessage("Ha ocurrido un error editando al trabajador")
+            setSeverity("success")
+            setSuccessOpen(true)
+            
+        }
     }
 
-    const GetUsers = async () =>{
+    const GetWorkers = async () =>{
         const result = await axios.get(Url+'getWorkers')
         setWorkers(result.data)
         //console.log(result.data)
     }
 
-    const SearchWorkerByInfo = async (e,SearchUser) =>{
+    const SearchWorkerByInfo = async (e,SearchWorker) =>{
         e.preventDefault()
-        const result = await axios.get(Url+`getUserByInfo/${SearchUser}`)
+        const result = await axios.get(Url+`getWorkerByInfo/${SearchWorker}`)
         setWorkers(result.data)
         //console.log(result.data)
     }
 
-    const HandleEditButton = async (user_id) => {
-        setShowEditForm(true) 
-        setShowAddingForm(false)
-        setUserId(user_id)
+    const HandleEditButton = async (id_usuario, id_profesion) => {
+        setWorkerUserId(id_usuario)
+        setWorkerProfessionId(id_profesion)
         setModalForm(true)
-        const result = await axios.get(Url + `getUserById/${user_id}`)
+        const result = await axios.get(Url + `getWorkerById/${id_usuario}/${id_profesion}`)
         console.log(result.data);
-        setUserNames(result.data[0].nombres)
-        setUserLastNames(result.data[0].apellidos)
-        setUserName(result.data[0].user)
+        setWorkerName(result.data[0].nombre_completo)
         setUserCedula(result.data[0].cedula)
         setUserTelf(result.data[0].telefono)
-        setUserEmail(result.data[0].email)
-        setUserPassword(result.data[0].password)
-        setUserAddress(result.data[0].direccion)
-        setUserRol(result.data[0].rol)
+        setWorkerProfession(result.data[0].profesion)
+        setWorkerZones(result.data[0].zonas)
+        setWorkerDescription(result.data[0].descripcion)
+        setWorkerLastProfessionId(result.data[0].id_profesion)
     }
 
+    const getProfessions = async () =>{
+        const result = await axios.get(Url+'getProfesiones')
+        setProfessions(result.data)
+        //console.log(result.data)
+      }
+
+      const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+    setSuccessOpen(false);
+    };
+
+    const DeleteWorker = async (id_usuario, id_profesion) => {
+        try {
+            const result = await axios.delete(Url + `DeleteWorker/${id_usuario}/${id_profesion}`)
+            if(result.data.success===true){
+                setWorkers(Workers.filter(w=>w.id_user!==id_usuario && w.id_profesion!== id_profesion))
+                setMessage("trabajador eliminado exitosamente")
+                setSeverity("success")
+                setSuccessOpen(true)
+                setOpenModal(false)
+            }else{
+                setMessage("Ha ocurrido un error eliminando al trabajador")
+                setSeverity("error")
+                setSuccessOpen(true)
+                setOpenModal(false)
+            }
+        } catch (error) {
+            setMessage("Ha ocurrido un error eliminando al trabajador")
+            setSeverity("error")
+            setSuccessOpen(true)
+            setOpenModal(false)
+        }
+
+    }
+
+    const Modalstyles = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
+
     useEffect(() => {
-        GetUsers()
+        GetWorkers();
+        getProfessions();
     }, [])
     
 
   return (
     <div className="manageProfessionsMainContainer">
-    <Box component="form" onSubmit={(e)=>SearchUser(e, UserId)} sx={{ mt: 1, display:"flex", alignItems:"center"}}>
+    <Box component="form" onSubmit={(e)=>SearchWorkerByInfo(e, SearchWorker)} sx={{ mt: 1, display:"flex", alignItems:"center"}}>
         <TextField
             margin="normal"
             required
             label="Cedula"
             autoFocus
             InputProps={{ sx: { borderRadius: 35, paddingLeft:"0.5rem"} }}
-            onChange={(e) => setSearchUser(e.target.value)}
+            onChange={(e) => setSearchWorker(e.target.value)}
             sx={{marginLeft:"2rem"}}
             type='number'
             />
@@ -125,22 +191,27 @@ export default function ManageWorkers() {
                 },
                 display:"inline"
             }}
-            onClick={(e)=>SearchWorkerByInfo(e,SearchUser)}>
+            onClick={(e)=>SearchWorkerByInfo(e,SearchWorker)}>
             Aceptar
+        </Button>   
+        <Button
+            variant="contained"
+            sx={{ mt: 3, mb: 2, ml: 2, 
+                borderRadius: 35,
+                backgroundColor: "gray",
+                padding: "14.5px 2rem",
+                fontSize: "14px" ,
+                ':hover': {
+                    bgcolor: 'gray',
+                    color: 'white',
+                },
+                display:"inline"
+            }}
+            onClick={()=>GetWorkers()}>
+            Cancelar
         </Button>   
     </Box>
     <div className="manageProfessionsContainerOne">
-    <div style={{height:"3rem"}} onClick={()=> {setModalForm(true); setShowAddingForm(true); setShowEditForm(false); setUserNames("")}}>
-            <AddCircleIcon 
-            sx={{fontSize:'3rem',  
-                color:"#F36C0E", 
-                '&:hover': {
-                    cursor: 'pointer',
-                }
-                }}
-            >
-            </AddCircleIcon>
-        </div>
         <TableContainer component={Paper} sx={{ width: "95%"}}>
             <Table sx={{ width: "100%" }} aria-label="simple table">
             <TableHead>
@@ -148,10 +219,9 @@ export default function ManageWorkers() {
                 <TableCell align='center' sx={{fontSize:"1rem"}}>Nombre</TableCell>
                 <TableCell align='center' sx={{fontSize:"1rem"}}>Cedula</TableCell>
                 <TableCell align='center' sx={{fontSize:"1rem"}}>Telefono</TableCell>
-                <TableCell align='center' sx={{fontSize:"1rem"}}>Profesion</TableCell>
+                <TableCell align='center' sx={{fontSize:"1rem"}}>Categoria</TableCell>
                 <TableCell align='center' sx={{fontSize:"1rem"}}>Zonas</TableCell>
                 <TableCell align='center' sx={{fontSize:"1rem"}}>Descripcion</TableCell>
-                <TableCell align='center'></TableCell>
                 <TableCell align='center'></TableCell>
                 </TableRow>
             </TableHead>
@@ -168,7 +238,7 @@ export default function ManageWorkers() {
                     <TableCell sx={{padding:"14px"}} align='center'>{row.zonas}</TableCell>
                     <TableCell sx={{padding:"14px"}} align='center'>{row.descripcion}</TableCell>
                     <TableCell sx={{padding:"14px"}} align='center'>
-                        <div onClick={()=>HandleEditButton(row.id)}>
+                        <div onClick={()=>HandleEditButton(row.id_user, row.id_profesion)}>
                             <ModeEditIcon 
                                 sx={{
                                     '&:hover': {
@@ -179,7 +249,7 @@ export default function ManageWorkers() {
                         </div>
                     </TableCell>
                     <TableCell align='center'>
-                        <div onClick={()=>handleOpenModal(row.id)}>
+                        <div onClick={()=>handleOpenModal(row.id_user, row.id_profesion)}>
                             <DeleteIcon 
                                 sx={{
                                     '&:hover': {
@@ -196,6 +266,12 @@ export default function ManageWorkers() {
         </TableContainer>
         
     </div>
+    <Snackbar open={SuccessOpen} autoHideDuration={6000} onClose={handleClose} 
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }} TransitionComponent="SlideTransition">
+            <Alert onClose={handleClose} severity={Severity} sx={{ width: '100%' }}>
+                {Message}
+            </Alert>
+        </Snackbar>
     <Modal
             open={ModalForm}
             onClose={handleCloseModalForm}
@@ -204,7 +280,7 @@ export default function ManageWorkers() {
             sx={{display:'flex',alignItems:'center',justifyContent:'center'}}
         >
             <Container maxWidth="sm">
-                <Box
+            <Box
                     sx={{  
                     display: "flex",
                     flexDirection: "column",
@@ -213,107 +289,46 @@ export default function ManageWorkers() {
                     borderRadius:'10px',
                     backgroundColor:"white",
                     width:"100%"
-                    }}>
+            }}>
                     <Typography component="h1" variant="h5">
                         Editar Usuario
                     </Typography>
-                    
-                    <Box component="form" onSubmit={(e)=>EditWorker(e, UserId)} 
-                        sx={{ mt: 1, display:"flex", justifyContent:"space-between"}}>
-                        <Box>
+                    <Box component="form" onSubmit={(e)=>EditWorker(e, WorkerUserId, WorkerProfessionId)} 
+                        sx={{ mt: 1}}>
                             <TextField
                                 margin="normal"
-                                required
+                                disabled
                                 fullWidth
                                 label="Nombres"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"}}}
-                                onChange={(e) => setUserNames(e.target.value)}
-                                value={UserNames}
+                                onChange={(e) => setWorkerName(e.target.value)}
+                                value={WorkerName}
                                 sx={{width:"95%", mt:0.5}}
                             />
                             <TextField
                                 margin="normal"
-                                required
-                                fullWidth
-                                label="Apellidos"
-                                autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                                onChange={(e) => setUserLastNames(e.target.value)}
-                                value={UserLastNames}
-                                sx={{width:"95%" , mt:0.5}}
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                label="Usuario"
-                                disabled={ShowEditForm}
-                                autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                                onChange={(e) => setUserName(e.target.value)}
-                                value={UserName}
-                                sx={{width:"95%" , mt:0.5}}
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                label="Contrasena"
-                                autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                                onChange={(e) => setUserPassword(e.target.value)}
-                                value={UserPassword}
-                                sx={{width:"95%" , mt:0.5}}
-                            />
-                            <FormControl fullWidth sx={{maxWidth:"95%"}}>
-                                <InputLabel 
-                                    id="demo-simple-select-label"
-                                    sx={{width:"95%", borderRadius: 35, mt:0.5, mb:"8px"}}>'
-                                    Rol
-                                </InputLabel>
-                                <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={UserRol}
-                                label="Rol"
-                                onChange={(e) => setUserRol(e.target.value)}
-                                sx={{borderRadius: 35 , mt:0.5, mb:"8px",
-                                    }}
-                                >
-                                <MenuItem value={1}>Administrador</MenuItem>
-                                <MenuItem value={2}>Usuario Regular</MenuItem>
-                                <MenuItem value={3}>Trabajador</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-                        <Box>
-                            <TextField
-                                margin="normal"
-                                required
+                                disabled
                                 fullWidth
                                 label="Cedula"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserCedula(e.target.value)}
-                                value={UserCedula}
+                                value={WorkerCedula}
                                 sx={{width:"95%" , mt:0.5}}
                             />
                             <TextField
                                 margin="normal"
-                                required
+                                disabled
                                 fullWidth
                                 label="Telefono"
                                 autoFocus
                                 InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserTelf(e.target.value)}
-                                value={UserTelf}
+                                value={WorkerTelf}
                                 type='number'
                                 sx={{width:"95%" , mt:0.5}}
                             />
-                            {UserRol===3 &&
-                            <React.Fragment>
-
                                 <TextField
                                 margin="normal"
                                 required
@@ -334,9 +349,9 @@ export default function ManageWorkers() {
                                 <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={WorkerProfession}
+                                value={WorkerProfessionId}
                                 label="Profesion"
-                                onChange={(e) => setWorkerProfession(e.target.value)}
+                                onChange={(e) => setWorkerProfessionId(e.target.value)}
                                 sx={{borderRadius: 35 , mt:0.5, mb:"6px",
                                     }}
                                 >{
@@ -345,11 +360,20 @@ export default function ManageWorkers() {
                                     ))
                                 }
                                 </Select>
-                            </FormControl>
-                                
-                            </React.Fragment>
-                            }
-                        </Box>
+                            </FormControl>    
+                            <TextField
+                                margin="normal"
+                                multiline
+                                rows={4}
+                                fullWidth
+                                label="Descripcion"
+                                autoFocus
+                                InputProps={{ sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
+                                onChange={(e) => setWorkerDescription(e.target.value)}
+                                value={WorkerDescription}
+                                type='number'
+                                sx={{width:"95%" , mt:0.5}}
+                            />                        
                     </Box>
                         <Button
                             type="submit"
@@ -365,11 +389,62 @@ export default function ManageWorkers() {
                                     color: 'white',
                                 },
                             }}
-                            onClick={(e)=>EditWorker(e, UserId)}>
+                            onClick={(e)=>EditWorker(e, WorkerUserId, WorkerProfessionId)}>
                             Guardar Cambios
                         </Button>
-                </Box>
+            </Box>
             </Container>
+      </Modal>
+      <Modal
+            open={openModal}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+        <Box sx={Modalstyles}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Confirmación
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Está seguro que desea eliminar el registro?
+          </Typography>
+          <div style={{display: 'flex', justifyContent:"space-between"}}>
+            <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2, 
+                        borderRadius: 35,
+                        backgroundColor: "green",
+                        padding: "8px",
+                        fontSize: "18px" ,
+                        ':hover': {
+                            bgcolor: 'green',
+                            color: 'white',
+                        }
+                    }}
+                    onClick={()=>DeleteWorker(WorkerUserId,WorkerLastProfessionId)}>
+                    Aceptar
+            </Button>
+            <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2, 
+                        borderRadius: 35,
+                        backgroundColor: "red",
+                        padding: "8px",
+                        fontSize: "18px",
+                        ':hover': {
+                            bgcolor: 'red',
+                            color: 'white',
+                        }
+                    }}
+                    onClick={handleCloseModal}>
+                    Cancelar
+            </Button>
+          </div>
+        </Box>
       </Modal>
     </div>
   )

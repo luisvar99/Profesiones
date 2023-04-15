@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
-import Url from '../../Common/Url';
+import {Url} from '../../Common/Url';
 import '../../Styles/ManageProfessions.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -296,34 +296,34 @@ const Modalstyles = {
                     </Typography>
                     }
                     <Box component="form" onSubmit={(e)=>AddOrEditProfession(e, ProfessionId)} sx={{ mt: 1}}>
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        label={ShowAddingForm && "Nombre"}
-                        autoFocus
-                        InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                        onChange={(e) => setProfessionName(e.target.value)}
-                        value={ProfessionName}
-                        />
-                        <Button
-                            type="submit"
+                        <TextField
+                            margin="normal"
+                            required
                             fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2, 
-                                borderRadius: 35,
-                                backgroundColor: "#F36C0E",
-                                padding: "8px",
-                                fontSize: "18px" ,
-                                ':hover': {
-                                    bgcolor: '#FF6900',
-                                    color: 'white',
-                                },
-                            }}
-                        >
-                            {ShowAddingForm && "Aceptar"}  
-                            {ShowEditForm && "Guardar Cambios"}  
-                        </Button>
+                            label={ShowAddingForm && "Nombre"}
+                            autoFocus
+                            InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                            onChange={(e) => setProfessionName(e.target.value)}
+                            value={ProfessionName}
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2, 
+                                    borderRadius: 35,
+                                    backgroundColor: "#F36C0E",
+                                    padding: "8px",
+                                    fontSize: "18px" ,
+                                    ':hover': {
+                                        bgcolor: '#FF6900',
+                                        color: 'white',
+                                    },
+                                }}
+                            >
+                                {ShowAddingForm && "Aceptar"}  
+                                {ShowEditForm && "Guardar Cambios"}  
+                            </Button>
                     </Box>
                 </Box>
             </Container>
