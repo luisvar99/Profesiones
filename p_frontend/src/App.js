@@ -11,6 +11,7 @@ import ManageProfessions from './Components/Admin/Profesions/ManageProfessions';
 import React, { useEffect, useState } from 'react'
 import ManageUsers from './Components/Admin/Users/ManageUsers';
 import ManageWorkers from './Components/Admin/Workers/ManageWorkers';
+import WorkerDetails from './Components/Workers/WorkerDetails';
 
 
 function App() {
@@ -22,19 +23,22 @@ function App() {
             <Route path="/" exact element={<Login/>}/>      
           </Routes> 
           <Routes>
-            <Route path="/Home" exact element={<Home/>}/>      
+            <Route path="/Home" element={<Home/>}/>      
           </Routes> 
           <Routes>
-            <Route path="/AdminPanel" exact element={<Panel/>}/>      
+            <Route path="/AdminPanel" element={<Panel/>}/>      
           </Routes> 
           <Routes>
-            <Route path="/Admin/ManageProfessions" exact element={<ManageProfessions/>}/>      
+            <Route path="/Admin/ManageProfessions" element={<ManageProfessions/>}/>      
           </Routes> 
           <Routes>
-            <Route path="/Admin/ManageUsers" exact element={<ManageUsers/>}/>      
+            <Route path="/Admin/ManageUsers" element={<ManageUsers/>}/>      
           </Routes> 
           <Routes>
-            <Route path="/Admin/ManageWorkers" exact element={<ManageWorkers/>}/>      
+            <Route path="/Admin/ManageWorkers" element={<ManageWorkers/>}/>      
+          </Routes> 
+          <Routes>
+            <Route path="/Worker/:id_user/:id_profesion" element={<WorkerDetails/>}/>      
           </Routes> 
       </BrowserRouter>
     </AuthProvider>

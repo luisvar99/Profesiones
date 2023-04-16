@@ -39,6 +39,7 @@ export default function ManageUsers() {
     const [UserPassword, setUserPassword] = useState("")
     const [UserAddress, setUserAddress] = useState("")
     const [UserRol, setUserRol] = useState("")
+    const [UserImage, setUserImage] = useState("")
     const [WorkerDescription, setWorkerDescription] = useState("")
     const [WorkerZones, setWorkerZones] = useState("")
     const [WorkerProfession, setWorkerProfession] = useState(0)
@@ -97,6 +98,7 @@ export default function ManageUsers() {
                     user:UserName,
                     password: UserPassword,
                     direccion: UserAddress,
+                    image: UserImage,
                     id_profesion: WorkerProfession,
                     descripcion: WorkerDescription,
                     zonas: WorkerZones
@@ -124,6 +126,7 @@ export default function ManageUsers() {
                     password:UserPassword, 
                     direccion:UserAddress, 
                     rol:UserRol,
+                    image: UserImage,
                     descripcion: WorkerDescription,
                     zonas: WorkerZones
                 })
@@ -178,6 +181,7 @@ export default function ManageUsers() {
         setUserPassword(result.data[0].password)
         setUserAddress(result.data[0].direccion)
         setUserRol(result.data[0].rol)
+        setUserImage(result.data[0].image)
     }
 
     const DeleteUser = async (user_id) => {
@@ -217,6 +221,18 @@ export default function ManageUsers() {
         setProfessions(result.data)
         //console.log(result.data)
       }
+
+    const ConvertImageToBase64 = async (image) =>{
+        const reader = new FileReader();
+
+        reader.readAsDataURL(image);
+
+        reader.onload = ()=> {
+            setUserImage(reader.result);
+            /*console.log(reader.result);*/        
+        }
+
+    }
   
       
     const Modalstyles = {
@@ -291,6 +307,7 @@ export default function ManageUsers() {
                     <TableCell align='center' sx={{fontSize:"1rem"}}>Telefono</TableCell>
                     <TableCell align='center' sx={{fontSize:"1rem"}}>Correo</TableCell>
                     <TableCell align='center' sx={{fontSize:"1rem"}}>Direccion</TableCell>
+                    <TableCell align='center' sx={{fontSize:"1rem"}}>Imagen</TableCell>
                     <TableCell align='center'></TableCell>
                     <TableCell align='center'></TableCell>
                     </TableRow>
@@ -308,6 +325,16 @@ export default function ManageUsers() {
                         <TableCell sx={{padding:"14px"}} align='center'>{row.telefono}</TableCell>
                         <TableCell sx={{padding:"14px"}} align='center'>{row.email}</TableCell>
                         <TableCell sx={{padding:"14px"}} align='center'>{row.direccion}</TableCell>
+                        <TableCell sx={{padding:"14px", width:"5%"}} align='center'>
+                            <div /* style={{width:"20%"}} */>
+                                <img
+                                    src={row.image}
+                                    alt="Error"
+                                    loading="lazy"
+                                    style={{width:"100%", heigth:"100%"}}
+                                />
+                            </div>
+                        </TableCell>
                         <TableCell sx={{padding:"14px"}} align='center'>
                             <div onClick={()=>HandleEditButton(row.id)}>
                                 <ModeEditIcon 
@@ -506,6 +533,16 @@ export default function ManageUsers() {
                                 value={WorkerDescription}
                                 sx={{width:"95%" , mt:0.5}}
                             />}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                autoFocus
+                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                onChange={(e) => ConvertImageToBase64(e.target.files[0])}
+                                type='file'
+                                sx={{width:"95%" , mt:0.5}}
+                            />
                         </Box>
                         <Box>
                             <TextField
