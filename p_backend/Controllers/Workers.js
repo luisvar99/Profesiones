@@ -3,10 +3,26 @@ const {db} = require('../database');
 const getWorkers = async (req, res) => {
     try {
         const result = await db.query(`select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
-        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_user, t.id_profesion
+        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_user, t.id_profesion,
+        u.image
         from trabajadores t
         INNER JOIN users u ON u.id = t.id_user
         INNER JOIN profesiones p ON p.id = t.id_profesion`);
+        //console.log("getProfesiones : " + JSON.stringify(result.rows));
+        res.json(result.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
+} 
+const getWorkersByProfession = async (req, res) => {
+    try {
+        const result = await db.query(`select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
+        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_user, t.id_profesion,
+        u.image
+        from trabajadores t
+        INNER JOIN users u ON u.id = t.id_user
+        INNER JOIN profesiones p ON p.id = t.id_profesion
+        WHERE id_profesion=($1)`,[req.params.id]);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
     } catch (error) {
@@ -17,7 +33,8 @@ const getWorkers = async (req, res) => {
 const getWorkerById = async (req, res) => {
     try {
         const result = await db.query(`select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
-        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_profesion
+        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_profesion, t.id_user,
+        u.image
         from trabajadores t
         INNER JOIN users u ON u.id = t.id_user
         INNER JOIN profesiones p ON p.id = t.id_profesion
@@ -46,7 +63,6 @@ const getWorkerByInfo = async (req, res) => {
 } 
 
 const EditWorker = async (req, res) => {
-    console.log("EditWorker: " + JSON.stringify(req.body));
     try {
         const result = await db.query(`UPDATE trabajadores SET descripcion=($1), zonas=($2), id_profesion = ($3)
         WHERE id_user = ($4) AND id_profesion = ($5)`,[
@@ -89,4 +105,4 @@ const getTotalNumberoOfWorkers = async (req, res) => {
 } 
 
 module.exports = {getWorkers, getTotalNumberoOfWorkers, getWorkerById, 
-    EditWorker, DeleteWorker, getWorkerByInfo}
+    EditWorker, DeleteWorker, getWorkerByInfo, getWorkersByProfession}

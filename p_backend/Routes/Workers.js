@@ -1,12 +1,13 @@
 const {Router} = require('express')
 const {getWorkers, getTotalNumberoOfWorkers, getWorkerById, EditWorker, 
-    DeleteWorker, getWorkerByInfo
+    DeleteWorker, getWorkerByInfo, getWorkersByProfession
 } = require('../Controllers/Workers')
 
 const router = new Router();
 
 router.get('/getWorkers', getWorkers)
 router.get('/getWorkerById/:id_usuario/:id_profesion', getWorkerById)
+router.get('/getWorkersByProfession/:id', getWorkersByProfession)
 router.get('/getWorkerByInfo/:cedula', getWorkerByInfo)
 router.get('/getTotalNumberOfWorkers', getTotalNumberoOfWorkers)
 
