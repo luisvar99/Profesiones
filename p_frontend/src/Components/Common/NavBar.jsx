@@ -9,6 +9,7 @@ import { useContext } from 'react'
 import AuthContext from '../Context/AuthContext';
 import SideBar from './SideBar'
 import React, { useEffect, useState } from 'react'
+import {Link} from 'react-router-dom'
 
 
 export default function NavBar() {
@@ -58,7 +59,12 @@ export default function NavBar() {
                 Bienvenido, {sessionStorage.getItem("userName")}
               </Typography>
         
-          {/* <Button color="inherit">Login</Button> */}
+              {
+                !sessionStorage.getItem("userName") &&
+              <Typography variant="h6" component="div">
+                <Link to="/SignUp" style={{textDecoration:"none", color:"white"}}>Registarme</Link>
+              </Typography>
+              }
         </Toolbar>
       </AppBar>
       {

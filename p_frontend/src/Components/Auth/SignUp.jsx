@@ -14,7 +14,7 @@ import AuthContext from '../Context/AuthContext';
 import axios from "axios"
 import {Url} from '../Common/Url'
 
-export default function Login() {
+export default function SignUp() {
     const navigate = useNavigate();
 
     const {user, setUser} = useContext(AuthContext);
@@ -25,7 +25,7 @@ export default function Login() {
     const [WrongUsername, setWrongUsername] = useState(false); 
     const [ErrorMessage, setErrorMessage] = useState(""); 
 
-    const Login = async (event) => {
+    const UserSignUp = async (event) => {
         event.preventDefault();
         try {
             const result = await axios.post(Url+"login",{
@@ -65,13 +65,13 @@ export default function Login() {
         
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+      };
 
   return (
     <div className="login_main_container">
@@ -94,9 +94,9 @@ export default function Login() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Inicio de Sesion
+          Registro
         </Typography>
-        <Box component="form" onSubmit={Login} sx={{ mt: 1}}>
+        <Box component="form" onSubmit={UserSignUp} sx={{ mt: 1}}>
           <TextField
             margin="normal"
             required
@@ -138,22 +138,18 @@ export default function Login() {
                   },
             }}
           >
-            Iniciar sesion
+            Crear Cuenta
           </Button>
-          <div>
-            <Link href="/Home">
-              Olvidaste tu contrasena?
-            </Link>
-          </div>
-          <div>
-            <Link href="/SignUp">
-              No tienes una cuenta? Registrate
-            </Link>
-          </div>
+          <Grid container>
+            <Grid item>
+              <Link to="/" variant="body2">
+               Ya tienes una cuenta? Inicia Sesion
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </Container>
     </div>
-  );
-
+  )
 }

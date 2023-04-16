@@ -2,7 +2,7 @@
     display:grid;
     justify-content: center;
     grid-template-columns: 16% 16% 16% 16% 16%;
-    column-gap: 2.5rem;
+    column-gap: 2.2rem;
     margin-top: 2rem;
 }
 

@@ -272,129 +272,129 @@ export default function ManageWorkers() {
                 {Message}
             </Alert>
         </Snackbar>
-    <Modal
-            open={ModalForm}
-            onClose={handleCloseModalForm}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            sx={{display:'flex',alignItems:'center',justifyContent:'center'}}
-        >
-            <Container maxWidth="sm">
-            <Box
-                    sx={{  
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    padding:'1rem 2rem',
-                    borderRadius:'10px',
-                    backgroundColor:"white",
-                    width:"100%"
-            }}>
-                    <Typography component="h1" variant="h5">
-                        Editar Usuario
-                    </Typography>
-                    <Box component="form" onSubmit={(e)=>EditWorker(e, WorkerUserId, WorkerProfessionId)} 
-                        sx={{ mt: 1}}>
-                            <TextField
-                                margin="normal"
-                                disabled
-                                fullWidth
-                                label="Nombres"
-                                autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"}}}
-                                onChange={(e) => setWorkerName(e.target.value)}
-                                value={WorkerName}
-                                sx={{width:"95%", mt:0.5}}
-                            />
-                            <TextField
-                                margin="normal"
-                                disabled
-                                fullWidth
-                                label="Cedula"
-                                autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                                onChange={(e) => setUserCedula(e.target.value)}
-                                value={WorkerCedula}
-                                sx={{width:"95%" , mt:0.5}}
-                            />
-                            <TextField
-                                margin="normal"
-                                disabled
-                                fullWidth
-                                label="Telefono"
-                                autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                                onChange={(e) => setUserTelf(e.target.value)}
-                                value={WorkerTelf}
-                                type='number'
-                                sx={{width:"95%" , mt:0.5}}
-                            />
-                                <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                label="Zonas de trabajo"
-                                autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                                onChange={(e) => setWorkerZones(e.target.value)}
-                                value={WorkerZones}
-                                sx={{width:"95%" , mt:0.5}}
-                                />
-                            <FormControl fullWidth sx={{maxWidth:"95%" , mt:0.5}}>
-                                <InputLabel 
-                                    id="demo-simple-select-label"
-                                    sx={{width:"95%", borderRadius: 35, mt:0.5}}>'
-                                    Categoria
-                                </InputLabel>
-                                <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={WorkerProfessionId}
-                                label="Profesion"
-                                onChange={(e) => setWorkerProfessionId(e.target.value)}
-                                sx={{borderRadius: 35 , mt:0.5, mb:"6px",
-                                    }}
-                                >{
-                                    Professions.map((p,index)=>(
-                                        <MenuItem key={index} value={p.id}>{p.nombre}</MenuItem>
-                                    ))
-                                }
-                                </Select>
-                            </FormControl>    
-                            <TextField
-                                margin="normal"
-                                multiline
-                                rows={4}
-                                fullWidth
-                                label="Descripcion"
-                                autoFocus
-                                InputProps={{ sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
-                                onChange={(e) => setWorkerDescription(e.target.value)}
-                                value={WorkerDescription}
-                                type='number'
-                                sx={{width:"95%" , mt:0.5}}
-                            />                        
-                    </Box>
-                        <Button
-                            type="submit"
+<Modal
+        open={ModalForm}
+        onClose={handleCloseModalForm}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{display:'flex',alignItems:'center',justifyContent:'center'}}
+    >
+        <Container maxWidth="sm">
+        <Box
+                sx={{  
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding:'1rem 2rem',
+                borderRadius:'10px',
+                backgroundColor:"white",
+                width:"100%"
+        }}>
+                <Typography component="h1" variant="h5">
+                    Editar Usuario
+                </Typography>
+                <Box component="form" onSubmit={(e)=>EditWorker(e, WorkerUserId, WorkerProfessionId)} 
+                    sx={{ mt: 1}}>
+                        <TextField
+                            margin="normal"
+                            disabled
                             fullWidth
-                            variant="contained"
-                            sx={{ mt: 1, mb: 1, 
-                                borderRadius: 35,
-                                backgroundColor: "#F36C0E",
-                                padding: "8px",
-                                fontSize: "18px" ,
-                                ':hover': {
-                                    bgcolor: '#FF6900',
-                                    color: 'white',
-                                },
-                            }}
-                            onClick={(e)=>EditWorker(e, WorkerUserId, WorkerProfessionId)}>
-                            Guardar Cambios
-                        </Button>
-            </Box>
-            </Container>
-      </Modal>
+                            label="Nombres"
+                            autoFocus
+                            InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"}}}
+                            onChange={(e) => setWorkerName(e.target.value)}
+                            value={WorkerName}
+                            sx={{width:"95%", mt:0.5}}
+                        />
+                        <TextField
+                            margin="normal"
+                            disabled
+                            fullWidth
+                            label="Cedula"
+                            autoFocus
+                            InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                            onChange={(e) => setUserCedula(e.target.value)}
+                            value={WorkerCedula}
+                            sx={{width:"95%" , mt:0.5}}
+                        />
+                        <TextField
+                            margin="normal"
+                            disabled
+                            fullWidth
+                            label="Telefono"
+                            autoFocus
+                            InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                            onChange={(e) => setUserTelf(e.target.value)}
+                            value={WorkerTelf}
+                            type='number'
+                            sx={{width:"95%" , mt:0.5}}
+                        />
+                            <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            label="Zonas de trabajo"
+                            autoFocus
+                            InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                            onChange={(e) => setWorkerZones(e.target.value)}
+                            value={WorkerZones}
+                            sx={{width:"95%" , mt:0.5}}
+                            />
+                        <FormControl fullWidth sx={{maxWidth:"95%" , mt:0.5}}>
+                            <InputLabel 
+                                id="demo-simple-select-label"
+                                sx={{width:"95%", borderRadius: 35, mt:0.5}}>'
+                                Categoria
+                            </InputLabel>
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={WorkerProfessionId}
+                            label="Profesion"
+                            onChange={(e) => setWorkerProfessionId(e.target.value)}
+                            sx={{borderRadius: 35 , mt:0.5, mb:"6px",
+                                }}
+                            >{
+                                Professions.map((p,index)=>(
+                                    <MenuItem key={index} value={p.id}>{p.nombre}</MenuItem>
+                                ))
+                            }
+                            </Select>
+                        </FormControl>    
+                        <TextField
+                            margin="normal"
+                            multiline
+                            rows={4}
+                            fullWidth
+                            label="Descripcion"
+                            autoFocus
+                            InputProps={{ sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
+                            onChange={(e) => setWorkerDescription(e.target.value)}
+                            value={WorkerDescription}
+                            type='number'
+                            sx={{width:"95%" , mt:0.5}}
+                        />                        
+                </Box>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 1, mb: 1, 
+                            borderRadius: 35,
+                            backgroundColor: "#F36C0E",
+                            padding: "8px",
+                            fontSize: "18px" ,
+                            ':hover': {
+                                bgcolor: '#FF6900',
+                                color: 'white',
+                            },
+                        }}
+                        onClick={(e)=>EditWorker(e, WorkerUserId, WorkerProfessionId)}>
+                        Guardar Cambios
+                    </Button>
+        </Box>
+        </Container>
+    </Modal>
       <Modal
             open={openModal}
             onClose={handleClose}

@@ -71,7 +71,7 @@ export default function Home() {
         </div>
         <div className="cards_container">
             {Workers.map((w, index)=>(
-                <Card key={index}>
+                <Card key={index} sx={{width:"100%"}}>
                     <Link to={`/Worker/${w.id_user}/${w.id_profesion}`} style={{textDecoration:"none", color:"black"}}>
                         <CardActionArea>
                             <img
@@ -86,11 +86,14 @@ export default function Home() {
                                 </Typography>
                                 
                                 <Typography variant="body2" color="text.secondary">
-                                    {w.descripcion}
+                                <b>Especialidades: </b>{w.descripcion}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    <b>Zonas:</b> {w.zonas}
+                                    <b>Zonas: </b> {w.zonas}
                                 </Typography>
+                                {/* <Typography variant="body2" color="text.secondary">
+                                    <b>Contacto: </b> {w.telefono}
+                                </Typography> */}
                             </CardContent>
                         </CardActionArea>
                     </Link>

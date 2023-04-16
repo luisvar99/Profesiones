@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react'
 import ManageUsers from './Components/Admin/Users/ManageUsers';
 import ManageWorkers from './Components/Admin/Workers/ManageWorkers';
 import WorkerDetails from './Components/Workers/WorkerDetails';
+import SignUp from './Components/Auth/SignUp';
 
 
 function App() {
@@ -39,6 +40,9 @@ function App() {
           </Routes> 
           <Routes>
             <Route path="/Worker/:id_user/:id_profesion" element={<WorkerDetails/>}/>      
+          </Routes> 
+          <Routes>
+            <Route path="/SignUp" element={<SignUp/>}/>      
           </Routes> 
       </BrowserRouter>
     </AuthProvider>

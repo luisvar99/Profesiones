@@ -1,7 +1,7 @@
 select * from users ORDER BY id desc limit 1
 --DELETE FROM users WHERE apellidos ='Prueba'
 --select * from profesiones 
-delete from profesiones where nombre like 'M%'
+--delete from profesiones where nombre like 'M%'
 select * from trabajadores 
 select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, u.cedula, u.telefono, p.nombre as profesion, t.zonas, 
 t.descripcion 
