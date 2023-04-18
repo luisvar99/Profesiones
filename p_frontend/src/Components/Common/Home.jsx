@@ -15,8 +15,8 @@ import Modal from '@mui/material/Modal';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
-
-
+import { MobileTimePicker } from '@mui/x-date-pickers';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 
 export default function Home() {
     
@@ -24,6 +24,7 @@ export default function Home() {
     const [Professions, setProfessions] = useState([])
     const [openModal, setOpenModal] = useState(false); 
     const [Date, setDate] = useState(dayjs().format('DD/MM/YYYY') ); 
+    const [Time, setTime] = useState(dayjs().get('hour')+':'+ dayjs().get('minute')); 
 
     const today = dayjs();
     const MaxDate = dayjs().add(5, 'day');
@@ -142,15 +143,24 @@ export default function Home() {
               Solicitud de servicio
             </Typography>
             <DemoItem label="Fecha">
-          <DatePicker
-            defaultValue={today}
-            maxDate={MaxDate}
-            minDate={today}
-            views={['year', 'month', 'day']}
-            onChange={(value)=> setDate(value.format('DD/MM/YYYY'))}
-            format='DD/MM/YYYY'
-          />
-        </DemoItem>
+                <DatePicker
+                    defaultValue={today}
+                    maxDate={MaxDate}
+                    minDate={today}
+                    views={['year', 'month', 'day']}
+                    onChange={(value)=> setDate(value.format('DD/MM/YYYY'))}
+                    format='DD/MM/YYYY'
+                />
+            </DemoItem>
+            <Box sx={{mt:2}} >
+                <DemoItem label={`Hora ${Time}`} >
+                    <MobileTimePicker 
+                        defaultValue={today} 
+                        onChange={(value) => setTime(value.get('hour') + ':' + (value.get('minute')))}
+                    />
+                </DemoItem> 
+            </Box>
+
         <Button
             type="submit"
             fullWidth
