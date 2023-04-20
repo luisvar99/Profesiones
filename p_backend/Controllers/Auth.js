@@ -9,8 +9,11 @@ const Login = async (req, res) => {
     if(potencialLogin.rowCount>0){
         const isSamePass = await bcrypt.compare(req.body.password, potencialLogin.rows[0].password)
         if(isSamePass){
-            res.json({success: true, username: req.body.username, rol: potencialLogin.rows[0].rol})
-            console.log(potencialLogin.rows[0].rol);
+            res.json(
+                        {   success: true, username: req.body.username, rol: potencialLogin.rows[0].rol, 
+                            id: potencialLogin.rows[0].id
+                        })
+            //console.log(potencialLogin.rows[0].rol);
         }else{
             res.json({wrongPassword: true})
             console.log("Wrong password");

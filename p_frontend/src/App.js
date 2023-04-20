@@ -13,6 +13,7 @@ import ManageUsers from './Components/Admin/Users/ManageUsers';
 import ManageWorkers from './Components/Admin/Workers/ManageWorkers';
 import WorkerDetails from './Components/Workers/WorkerDetails';
 import SignUp from './Components/Auth/SignUp';
+import Profile from './Components/User/Profile';
 
 
 function App() {
@@ -43,6 +44,9 @@ function App() {
           </Routes> 
           <Routes>
             <Route path="/SignUp" element={<SignUp/>}/>      
+          </Routes> 
+          <Routes>
+            <Route path="/MyProfile" element={<Profile/>}/>      
           </Routes> 
       </BrowserRouter>
     </AuthProvider>

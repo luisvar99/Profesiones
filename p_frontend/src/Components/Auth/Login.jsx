@@ -34,6 +34,7 @@ export default function Login() {
             })
             if(result.data.success) {
               sessionStorage.setItem("userName", result.data.username)
+              sessionStorage.setItem("userID", result.data.id)
               //setUser({name:sessionStorage.getItem("userName", result.data.username), rol: 1})
               
               if(result.data.rol===1){

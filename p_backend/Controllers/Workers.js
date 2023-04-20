@@ -33,8 +33,8 @@ const getWorkersByProfession = async (req, res) => {
 const getWorkerById = async (req, res) => {
     try {
         const result = await db.query(`select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
-        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_profesion, t.id_user,
-        u.image
+        u.cedula, u.telefono, p.nombre as profesion, t.zonas, t.descripcion, t.id_profesion, 
+        t.id_user AS id_trabajador, u.image
         from trabajadores t
         INNER JOIN users u ON u.id = t.id_user
         INNER JOIN profesiones p ON p.id = t.id_profesion

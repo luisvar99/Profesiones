@@ -17,6 +17,8 @@ import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { MobileTimePicker } from '@mui/x-date-pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Home() {
     
@@ -25,8 +27,14 @@ export default function Home() {
     const [openModal, setOpenModal] = useState(false); 
     const [Date, setDate] = useState(dayjs().format('DD/MM/YYYY') ); 
     const [Time, setTime] = useState(dayjs().get('hour')+':'+ dayjs().get('minute')); 
+    const [Status, setStatus] = useState(0); 
+    const [FechaEjecucion, setFechaEjecucion] = useState(dayjs().get('hour')+':'+ dayjs().get('minute')); 
+    const [WorkerID, setWorkerID] = useState(0); 
+    const [WorkerIdProfesion, setWorkerIdProfesion] = useState(0); 
+    const [SolicitudAdded, setSolicitudAdded] = useState(false)
+    const [ShowSpinnerLoader, setShowSpinnerLoader] = useState(false)
 
-    const today = dayjs();
+    const tomorrow = dayjs().add(1, 'day');
     const MaxDate = dayjs().add(5, 'day');
 
     const handleCloseModal = () => {
@@ -34,20 +42,69 @@ export default function Home() {
     }
 
     const GetWorkers = async () =>{
-        const result = await axios.get(Url+'getWorkers')
-        setWorkers(result.data)
-        console.log(result.data)
+        try {
+            const result = await axios.get(Url+'getWorkers')
+            setWorkers(result.data)
+            console.log(result.data)
+            
+        } catch (error) {
+            console.log(error.message);
+        }
     }
 
     const getProfessions = async () =>{
-        const result = await axios.get(Url+'getProfesiones')
-        setProfessions(result.data)
-        //console.log(result.data)
+        try {
+            const result = await axios.get(Url+'getProfesiones')
+            setProfessions(result.data)
+            //console.log(result.data)
+            
+        } catch (error) {
+            console.log(error.message);
+        }
     }
     const FilterWorkersByProfession = async (id_profesion) =>{
-        console.log("FilterWorkersByProfession: " + id_profesion)
-        const result = await axios.get(Url+'getWorkersByProfession/'+id_profesion)
-        setWorkers(result.data)
+        try {
+            console.log("FilterWorkersByProfession: " + id_profesion)
+            const result = await axios.get(Url+'getWorkersByProfession/'+id_profesion)
+            setWorkers(result.data)
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    const CreateSolicitud = async (e) =>{
+        e.preventDefault()
+        setShowSpinnerLoader(true)
+        try {
+            const result = await axios.post(Url+'CreateSolicitud',{
+                id_user: sessionStorage.getItem("userID"),
+                id_trabajador: WorkerID,
+                id_profesion: WorkerIdProfesion,
+                fecha: Date,
+                hora: Time,
+                status: 0,
+                fecha_ejecucion: FechaEjecucion
+            })
+            if(result.data.success===true){
+                setShowSpinnerLoader(false)
+                setSolicitudAdded(true)
+            }else{
+                setShowSpinnerLoader(false)
+                setSolicitudAdded(false)
+            }
+        } catch (error) {
+            setSolicitudAdded(false)
+            setShowSpinnerLoader(false)
+            console.log(error.message);
+        }
+
+    }
+
+    const getWorkerById = async (id_user, id_profesion) => {
+        const result = await axios.get(Url + `getWorkerById/${id_user}/${id_profesion}`)
+        console.log(result.data);
+        setWorkerID(result.data[0].id_trabajador)
+        setWorkerIdProfesion(result.data[0].id_profesion)
     }
 
     const Modalstyles = {
@@ -103,8 +160,8 @@ export default function Home() {
             </div>
             <div className="cards_container">
                 {Workers.map((w, index)=>(
-                    <Card key={index} sx={{width:"100%"}} onClick={()=>setOpenModal(true)}>
-                            <CardActionArea>
+                    <Card key={index} /* sx={{width:"100%"}} */ onClick={()=>setOpenModal(true)}>
+                            <CardActionArea onClick={()=>getWorkerById(w.id_user ,w.id_profesion)}>
                                 <img
                                     src={w.image}
                                     alt="Error"
@@ -138,47 +195,57 @@ export default function Home() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
           >
-          <Box sx={Modalstyles}>
-            <Typography id="modal-modal-description" variant="h6" sx={{ mt: 2, textAlign:"center" }}>
-              Solicitud de servicio
-            </Typography>
-            <DemoItem label="Fecha">
-                <DatePicker
-                    defaultValue={today}
-                    maxDate={MaxDate}
-                    minDate={today}
-                    views={['year', 'month', 'day']}
-                    onChange={(value)=> setDate(value.format('DD/MM/YYYY'))}
-                    format='DD/MM/YYYY'
-                />
-            </DemoItem>
-            <Box sx={{mt:2}} >
-                <DemoItem label={`Hora ${Time}`} >
-                    <MobileTimePicker 
-                        defaultValue={today} 
-                        onChange={(value) => setTime(value.get('hour') + ':' + (value.get('minute')))}
+            <Box sx={Modalstyles} component="form" onSubmit={CreateSolicitud}>
+                <Typography id="modal-modal-description" variant="h6" sx={{ mt: 2, textAlign:"center" }}>
+                Solicitud de servicio
+                </Typography>
+                <DemoItem label="Fecha">
+                    <DatePicker
+                        defaultValue={tomorrow}
+                        maxDate={MaxDate}
+                        minDate={tomorrow}
+                        views={['year', 'month', 'day']}
+                        onChange={(value)=> setDate(value.format('DD/MM/YYYY'))}
+                        format='DD/MM/YYYY'
                     />
-                </DemoItem> 
+                </DemoItem>
+                <Box sx={{mt:2}} >
+                    <DemoItem label="Hora" >
+                        <MobileTimePicker 
+                            defaultValue={tomorrow} 
+                            onChange={(value) => setTime(value.get('hour') + ':' + (value.get('minute')))}
+                        />
+                    </DemoItem> 
+                </Box>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2, 
+                        borderRadius: 35,
+                        backgroundColor: "#F36C0E",
+                        padding: "8px",
+                        fontSize: "18px" ,
+                        ':hover': {
+                            bgcolor: '#FF6900',
+                            color: 'white',
+                        },
+                    }}
+                >
+                Aceptar
+                </Button>
+                <Box sx={{display:"flex", alignItems:"center", justifyContent: "center"}}>
+                    {SolicitudAdded &&
+                        <>
+                            <Typography variant="h6" sx={{mr: 1}}>
+                                Solicitud enviada con exito
+                            </Typography>
+                            <CheckCircleIcon color="success"/>
+                        </> 
+                    }
+                    {ShowSpinnerLoader && <CircularProgress color="success"/>}
+                </Box>
             </Box>
-
-        <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2, 
-                borderRadius: 35,
-                backgroundColor: "#F36C0E",
-                padding: "8px",
-                fontSize: "18px" ,
-                ':hover': {
-                    bgcolor: '#FF6900',
-                    color: 'white',
-                  },
-            }}
-          >
-            Aceptar
-          </Button>
-          </Box>
         </Modal>
     </LocalizationProvider>
   )

@@ -1,7 +1,12 @@
-select * from users ORDER BY id desc limit 1
---DELETE FROM users WHERE apellidos ='Prueba'
---select * from profesiones 
---delete from profesiones where nombre like 'M%'
+select * from users ORDER BY rol 
+select * from ratings
+select * from solicitudes
+select s.id AS id_solicitud, u.id AS id_user, CONCAT(u.nombres, ' ', u.apellidos) nombre_completo, u.cedula, 
+p.nombre, s.fecha, s.hora
+from solicitudes s
+INNER JOIN profesiones p ON p.id = s.id_profesion
+INNER JOIN users u ON u.id = s.id_user OR u.id = s.id_trabajador
+WHERE s.id =2
 select * from trabajadores 
 select CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, u.cedula, u.telefono, p.nombre as profesion, t.zonas, 
 t.descripcion 

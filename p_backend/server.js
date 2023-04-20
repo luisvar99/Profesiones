@@ -4,6 +4,7 @@ const UsersRoute = require('./Routes/users')
 const AuthRoute = require('./Routes/Auth')
 const ProfesionesRoute = require('./Routes/Profesiones')
 const WorkersRoute = require('./Routes/Workers')
+const SolicitudesRoute = require('./Routes/Solicitudes')
 
 require('dotenv').config();
 
@@ -22,6 +23,7 @@ app.use(UsersRoute)
 app.use(AuthRoute)
 app.use(ProfesionesRoute)
 app.use(WorkersRoute)
+app.use(SolicitudesRoute)
 
 const PORT = process.env.PORT || 4000
 app.listen(PORT, (req, res) => {
