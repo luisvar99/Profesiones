@@ -24,8 +24,8 @@ export default function SolicitudDetails({id_solicitud}) {
 
   return (
     <>
-        <p>Usuario: {User}</p>
-        <p>Trabajador: {Worker} </p>
+        <p style={{margin:0}}>Usuario: {User}</p>
+        <p style={{margin:0}}>Trabajador: {Worker} </p>
     </>
   )
 }

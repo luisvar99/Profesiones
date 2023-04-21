@@ -16,8 +16,8 @@ const getSolicitudes = async (req, res) => {
 
 const getSolicitudById = async (req, res) => {
     try {
-        const result = await db.query(`SELECT s.id AS id_solicitud, u.id AS id_user, 
-        CONCAT(u.nombres, ' ', u.apellidos) nombre_completo, u.cedula, p.nombre
+        const result = await db.query(`SELECT s.id AS id_solicitud, u.id AS id_user, s.status,
+        CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, u.cedula, p.nombre, s.fecha, s.hora
         from solicitudes s
         INNER JOIN profesiones p ON p.id = s.id_profesion
         INNER JOIN users u ON u.id = s.id_user OR u.id = s.id_trabajador 
@@ -43,11 +43,8 @@ const getSolicitudByInfo = async (req, res) => {
 
 const EditSolicitud = async (req, res) => {
     try {
-        const result = await db.query(`UPDATE Solicitudes SET nombres=($1), apellidos=($2), cedula=($3), telefono=($4), 
-        email=($5), rol=($6), "Solicitud"=($7), password=($8), direccion=($9), image=($10) WHERE id = ($11)`,[
-            req.body.nombres, req.body.apellidos, req.body.cedula, req.body.telefono, 
-            req.body.email, req.body.rol, req.body.Solicitud, req.body.password, 
-            req.body.direccion, req.body.image, req.body.id
+        const result = await db.query(`UPDATE Solicitudes SET fecha=($1), hora=($2), status=($3) WHERE id = ($4)`,[
+            req.body.fecha, req.body.hora, req.body.status, req.body.id
         ]);
         //console.log("AddSolicitud : " + JSON.stringify(result.rows));
         res.json({success: true});
