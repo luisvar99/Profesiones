@@ -18,6 +18,23 @@ const getSolicitudes = async (req, res) => {
     }
 } 
 
+const getUserSolicitudes = async (req, res) => {
+    try {
+        const result = await db.query(`SELECT s.id AS id_solicitud, u.id AS id_user, s.status,
+        CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, p.nombre AS categoria, s.fecha, s.hora,
+        s.fecha_ejecucion
+        from solicitudes s
+        INNER JOIN profesiones p ON p.id = s.id_profesion
+        INNER JOIN users u ON u.id = s.id_trabajador
+        WHERE s.id_user = ($1)
+        ORDER BY id_solicitud`,[req.params.id]);
+
+        res.json(result.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
+} 
+
 const getSolicitudById = async (req, res) => {
     try {
         const result = await db.query(`SELECT s.id AS id_solicitud, u.id AS id_user, s.status,
@@ -69,7 +86,7 @@ const CreateSolicitud = async (req, res) => {
     console.log(req.body);
     try {
         const result = await db.query(`INSERT INTO solicitudes (id_user, id_trabajador, id_profesion, fecha, hora, status, fecha_ejecucion) 
-        VALUES ($1, $2, $3, $4, $5)`,[
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`,[
             req.body.id_user, req.body.id_trabajador, req.body.id_profesion, req.body.fecha, req.body.hora,
             req.body.status, req.body.fecha_ejecucion
         ])
@@ -105,4 +122,4 @@ const getTotalNumberoOfSolicitudes = async (req, res) => {
 } 
 
 module.exports = {getSolicitudes, CreateSolicitud, getTotalNumberoOfSolicitudes, getSolicitudById, 
-    EditSolicitud, DeleteSolicitud, getSolicitudByInfo}
+    EditSolicitud, DeleteSolicitud, getSolicitudByInfo, getUserSolicitudes}

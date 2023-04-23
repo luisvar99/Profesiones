@@ -49,22 +49,15 @@ export default function TemporaryDrawer({state, seState, toggleDrawer}) {
           </ListItem>
         
         </Link>
-
-          {
-        parseInt(sessionStorage.getItem("rol"))===1
-        &&
-        <>
         {['Mis Solicitudes'].map((text, index) => (
-          <Link key={index} to='/AdminPanel' style={{textDecoration:"none", color: "black"}}>
+          <Link key={index} to={`/MisSolicitudes/${sessionStorage.getItem("userID")}`} style={{textDecoration:"none", color: "black"}}>
             <ListItem disablePadding>
               <ListItemButton sx={{textAlign: "center"}}>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
           </Link>
-          ))}
-        </>
-      }
+          ))}      
 
         {['Mi Perfil'].map((text, index) => (
           <Link key={index} to={`/MyProfile/${sessionStorage.getItem("userID")}`} style={{textDecoration:"none", color: "black"}}>

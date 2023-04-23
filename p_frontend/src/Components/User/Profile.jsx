@@ -19,6 +19,7 @@ export default function Profile() {
   const [UserTelefono, setUserTelefono] = useState("")
   const [UserCorreo, setUserCorreo] = useState("")
   const [UserPassword, setUserPassword] = useState("")
+  const [UserNewPassword, setUserNewPassword] = useState("")
   const [UserDireccion, setUserDireccion] = useState("")
   const [UserImage, setUserImage] = useState("")
   const [UserName, setUserName] = useState("")
@@ -51,13 +52,15 @@ export default function Profile() {
               id: params.id_user,
               nombres:UserNombres,
               apellidos:UserApellidos,
-              user:UserName,
               cedula:UserCedula, 
+              user:UserName,
               telefono:UserTelefono,
               email:UserCorreo, 
-              password:UserPassword, 
+              rol: 2,
+              password:UserNewPassword!=="" ? UserNewPassword: UserPassword, 
               direccion:UserDireccion, 
               image: UserImage,
+              newPassword: UserNewPassword!=="" ? true : false
             })
             if(result.data.success===true){
                 setMessage("Usuario editado exitosamente")
@@ -103,11 +106,17 @@ export default function Profile() {
         padding:'1rem 2rem',
         borderRadius:'10px',
         backgroundColor:"white",
-        width:"100%"
+        width:"100%",
+        border: "1px solid rgba(224, 224, 224, 1)",
+        mt:3,
+        mb:3
         }}>
         <Typography component="h1" variant="h5">
-            Crear Usuario
+            Crear una Cuenta
         </Typography>
+        <div style={{width:"30%", margin:"0.5rem 0"}}>
+            <img src={UserImage} alt="Error al cargar la imagen" style={{width:"100%", borderRadius:"50%"}}/>
+        </div>
         <Box component="form" onSubmit={(e)=>EditUser(e)} 
             sx={{ mt: 1, display:"flex", justifyContent:"space-between"}}>
             <Box>
@@ -152,8 +161,8 @@ export default function Profile() {
                     label="Contrasena"
                     autoFocus
                     InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
-                    onChange={(e) => setUserPassword(e.target.value)}
-                    value={UserPassword}
+                    onChange={(e) => setUserNewPassword(e.target.value)}
+                    /* value={UserPassword} */
                     sx={{width:"95%" , mt:0.5}}
                 />
                   

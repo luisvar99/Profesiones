@@ -14,6 +14,7 @@ import ManageWorkers from './Components/Admin/Workers/ManageWorkers';
 import WorkerDetails from './Components/Workers/WorkerDetails';
 import SignUp from './Components/Auth/SignUp';
 import Profile from './Components/User/Profile';
+import Solicitudes from './Components/User/Solicitudes';
 
 
 function App() {
@@ -47,6 +48,9 @@ function App() {
           </Routes> 
           <Routes>
             <Route path="/MyProfile/:id_user" element={<Profile/>}/>      
+          </Routes> 
+          <Routes>
+            <Route path="/MisSolicitudes/:id_user" element={<Solicitudes/>}/>      
           </Routes> 
       </BrowserRouter>
     </AuthProvider>

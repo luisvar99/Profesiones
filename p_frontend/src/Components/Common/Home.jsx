@@ -27,7 +27,7 @@ export default function Home() {
     const [Date, setDate] = useState(dayjs().format('DD/MM/YYYY') ); 
     const [Time, setTime] = useState(dayjs().get('hour')+':'+ dayjs().get('minute')); 
     const [Status, setStatus] = useState(0); 
-    const [FechaEjecucion, setFechaEjecucion] = useState(dayjs().get('hour')+':'+ dayjs().get('minute')); 
+    /* const [FechaEjecucion, setFechaEjecucion] = useState(dayjs().format('DD/MM/YYYY'));  */
     const [WorkerID, setWorkerID] = useState(0); 
     const [WorkerIdProfesion, setWorkerIdProfesion] = useState(0); 
     const [SolicitudAdded, setSolicitudAdded] = useState(false)
@@ -82,7 +82,7 @@ export default function Home() {
                 fecha: Date,
                 hora: Time,
                 status: 0,
-                fecha_ejecucion: FechaEjecucion
+                fecha_ejecucion: dayjs().format('DD/MM/YYYY')
             })
             if(result.data.success===true){
                 setShowSpinnerLoader(false)
@@ -213,6 +213,8 @@ export default function Home() {
                         <MobileTimePicker 
                             defaultValue={tomorrow} 
                             onChange={(value) => setTime(value.get('hour') + ':' + (value.get('minute')))}
+                            minTime={dayjs().set('hour', 8)}
+                            maxTime={dayjs().set('hour', 17)}
                         />
                     </DemoItem> 
                 </Box>

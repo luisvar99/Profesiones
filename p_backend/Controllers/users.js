@@ -35,10 +35,16 @@ const getUserByInfo = async (req, res) => {
 
 const EditUser = async (req, res) => {
     try {
+        var password = "";
+        if(req.body.newPassword==true){
+            password = await bcrypt.hash(req.body.password, 10);
+        }else{
+            password = req.body.password;
+        }
         const result = await db.query(`UPDATE users SET nombres=($1), apellidos=($2), cedula=($3), telefono=($4), 
         email=($5), rol=($6), "user"=($7), password=($8), direccion=($9), image=($10) WHERE id = ($11)`,[
             req.body.nombres, req.body.apellidos, req.body.cedula, req.body.telefono, 
-            req.body.email, req.body.rol, req.body.user, req.body.password, 
+            req.body.email, req.body.rol, req.body.user, password, 
             req.body.direccion, req.body.image, req.body.id
         ]);
         //console.log("AddUser : " + JSON.stringify(result.rows));
