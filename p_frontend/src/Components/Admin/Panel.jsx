@@ -59,21 +59,41 @@ export default function Panel() {
   }
 
   const getTotalNumberOfProfesiones = async () => {
-    const result = await axios.get(Url+'getTotalNumberoOfProfesiones');
-    setNumberOfProfessions(result.data)
+    try {
+      const result = await axios.get(Url+'getTotalNumberoOfProfesiones');
+      setNumberOfProfessions(result.data)
+      
+    } catch (error) {
+      console.log(error.message);
+    }
   }
   const getTotalNumberOfUsers = async () => {
-    const result = await axios.get(Url+'getTotalNumberoOfUsers');
-    setNumberOfUsers(result.data)
+    try {
+      const result = await axios.get(Url+'getTotalNumberoOfUsers');
+      setNumberOfUsers(result.data)
+      
+    } catch (error) {
+      console.log(error.message);
+    }
   }
   const getTotalNumberOfWorkers = async () => {
-    const result = await axios.get(Url+'getTotalNumberOfWorkers');
-    setNumberOfWorkers(result.data)
+    try {
+      const result = await axios.get(Url+'getTotalNumberOfWorkers');
+      setNumberOfWorkers(result.data)
+      
+    } catch (error) {
+      console.log(error.message);
+    }
   }
   const getSolicitudes = async () => {
-    const result = await axios.get(Url+'getSolicitudes');
-    setSolicitudes(result.data)
-    inputSearchSolicitud.current.reset()
+    try {
+      const result = await axios.get(Url+'getSolicitudes');
+      setSolicitudes(result.data)
+      inputSearchSolicitud.current.reset()
+      
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   const GetSolicitudByID = async (id_solicitud) => {
@@ -84,7 +104,7 @@ export default function Panel() {
         setSolicitudTime(result.data[0].hora)
         setSolicitudStatus(result.data[0].status)
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }
 
