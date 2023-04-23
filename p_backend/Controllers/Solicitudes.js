@@ -3,10 +3,14 @@ const bcrypt = require('bcrypt');
 
 const getSolicitudes = async (req, res) => {
     try {
-        const result = await db.query(`SELECT s.id AS id_solicitud, p.nombre, s.id, s.fecha, s.hora,
-        s.fecha_ejecucion, s.status
+        const result = await db.query(`SELECT s.id AS id_solicitud, u.id AS id_user, s.status,
+        CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, u.cedula, p.nombre, s.fecha, s.hora,
+        s.fecha_ejecucion
         from solicitudes s
-        INNER JOIN profesiones p ON p.id = s.id_profesion`);
+        INNER JOIN profesiones p ON p.id = s.id_profesion
+        INNER JOIN users u ON u.id = s.id_user
+        ORDER BY id_solicitud
+        LIMIT 10`);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
     } catch (error) {
@@ -32,7 +36,14 @@ const getSolicitudById = async (req, res) => {
 
 const getSolicitudByInfo = async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM Solicitudes WHERE cedula = ($1)',
+        const result = await db.query(`SELECT s.id AS id_solicitud, u.id AS id_user, s.status,
+        CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, u.cedula, p.nombre, s.fecha, s.hora,
+        s.fecha_ejecucion, u.cedula
+        from solicitudes s
+        INNER JOIN profesiones p ON p.id = s.id_profesion
+        INNER JOIN users u ON u.id = s.id_user OR u.id = s.id_trabajador 
+        WHERE u.cedula = ($1)
+        ORDER BY id_solicitud`,
         [req.params.cedula]);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);

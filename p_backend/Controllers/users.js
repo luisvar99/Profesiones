@@ -16,7 +16,7 @@ const getUserById = async (req, res) => {
         const result = await db.query('SELECT * FROM users WHERE id = ($1)',
         [req.params.id]);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
-        res.json(result.rows);
+        res.json(result.rows[0]);
     } catch (error) {
         console.log(error.message);
     }

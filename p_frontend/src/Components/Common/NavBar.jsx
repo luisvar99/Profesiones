@@ -45,8 +45,8 @@ export default function NavBar() {
   
   useEffect(() => {
     /* setName(sessionStorage.getItem("userName")) */
-    console.log(sessionStorage.getItem("userName"));
-    console.log(typeof sessionStorage.getItem("userName"));
+    /* console.log(sessionStorage.getItem("userName"));
+    console.log(typeof sessionStorage.getItem("userName")); */
   }, [])
 
   return (

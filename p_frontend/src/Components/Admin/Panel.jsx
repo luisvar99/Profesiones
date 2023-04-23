@@ -1,4 +1,4 @@
-import React ,{useState, useEffect} from 'react';
+import React ,{useState, useEffect, useRef } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -31,9 +31,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import TextField from "@mui/material/TextField";
 
 export default function Panel() {
 
+  const inputSearchSolicitud = useRef();
   const [NumberOfProfessions, setNumberOfProfessions] = useState(0)
   const [NumberOfUsers, setNumberOfUsers] = useState(0)
   const [NumberOfWorkers, setNumberOfWorkers] = useState(0)
@@ -47,6 +49,7 @@ export default function Panel() {
   const [PreviousTime, setPreviousTime] = useState("");
   const [SolicitudUpdated, setSolicitudUpdated] = useState(false)
   const [ShowSpinnerLoader, setShowSpinnerLoader] = useState(false)
+  const [SearchSolicitud, setSearchSolicitud] = useState("")
 
   const today = dayjs().add(0, 'day');
   const MaxDate = dayjs().add(5, 'day');
@@ -70,6 +73,7 @@ export default function Panel() {
   const getSolicitudes = async () => {
     const result = await axios.get(Url+'getSolicitudes');
     setSolicitudes(result.data)
+    inputSearchSolicitud.current.reset()
   }
 
   const GetSolicitudByID = async (id_solicitud) => {
@@ -119,6 +123,13 @@ export default function Panel() {
     }
 
 }
+
+  const SearchSolicitudByInfo = async (e, user_cedula) =>{
+    e.preventDefault()
+    const result = await axios.get(Url+`getSolicitudByInfo/${user_cedula}`)
+    setSolicitudes(result.data)
+    //console.log(result.data)
+  }
 
   const Modalstyles = {
     position: 'absolute',
@@ -189,16 +200,61 @@ export default function Panel() {
             <Typography sx={{ fontSize: 20 }} variant="h6" component="div">
               Solicitudes Recientes
             </Typography>
-            <TableContainer component={Paper} sx={{ width: "80%"}}>
-                  <Table sx={{ width: "100%" }} aria-label="simple table">
-                  <TableHead>
-                      <TableRow>
-                      <TableCell align='center' sx={{fontSize:"1.1rem"}}>ID</TableCell>
-                      <TableCell align='center' sx={{fontSize:"1.1rem"}}>Resumen</TableCell>
-                      <TableCell align='center' sx={{fontSize:"1.1rem"}}>Servicio</TableCell>
-                      <TableCell align='center' sx={{fontSize:"1.1rem"}}>Fecha / Hora de servicio</TableCell>
-                      <TableCell align='center' sx={{fontSize:"1.1rem"}}>Fecha Solicitud</TableCell>
-                      <TableCell align='center' sx={{fontSize:"1.1rem"}}>Status</TableCell>
+            <Box component="form" ref={inputSearchSolicitud} onSubmit={(e)=>SearchSolicitudByInfo(e, SearchSolicitud)} sx={{display:"flex", alignItems:"center"}}>
+            <TextField
+                margin="normal"
+                required
+                label="Cedula"
+                autoFocus
+                InputProps={{ sx: { borderRadius: 35} }}
+                onChange={(e) => setSearchSolicitud(e.target.value)}
+                /* sx={{marginLeft:"2rem"}} */
+                type='number'
+                />
+            <Button
+                type="submit"
+                variant="contained"
+                sx={{ mt: 3, mb: 2, ml: 2, 
+                    borderRadius: 35,
+                    backgroundColor: "#F36C0E",
+                    padding: "14.5px 2rem",
+                    fontSize: "14px" ,
+                    ':hover': {
+                        bgcolor: '#F36C0E',
+                        color: 'white',
+                    },
+                    display:"inline"
+                }}
+                /* onClick={(e)=>SearchSolicitudByInfo(e,SearchUser)} */>
+                Aceptar
+            </Button>
+            <Button
+            variant="contained"
+            sx={{ mt: 3, mb: 2, ml: 2, 
+                borderRadius: 35,
+                backgroundColor: "gray",
+                padding: "14.5px 2rem",
+                fontSize: "14px" ,
+                ':hover': {
+                    bgcolor: 'gray',
+                    color: 'white',
+                },
+                display:"inline"
+            }}
+            onClick={()=>getSolicitudes()}>
+            Cancelar
+        </Button>     
+        </Box>
+            <TableContainer component={Paper} sx={{ width: "80%", mb: 3}}>
+                  <Table sx={{ width: "100%"}} aria-label="simple table">
+                  <TableHead sx={{fontWeight:"bold" }}>
+                      <TableRow sx={{border: "1px solid rgba(224, 224, 224, 1)"}}>
+                      <TableCell align='center' sx={{fontSize:"1rem", fontWeight:"bold"}}>ID</TableCell>
+                      <TableCell align='center' sx={{fontSize:"1rem", fontWeight:"bold"}}>Resumen</TableCell>
+                      <TableCell align='center' sx={{fontSize:"1rem", fontWeight:"bold"}}>Servicio</TableCell>
+                      <TableCell align='center' sx={{fontSize:"1rem", fontWeight:"bold"}}>Fecha / Hora de servicio</TableCell>
+                      <TableCell align='center' sx={{fontSize:"1rem", fontWeight:"bold"}}>Fecha Solicitud</TableCell>
+                      <TableCell align='center' sx={{fontSize:"1rem", fontWeight:"bold"}}>Status</TableCell>
                       <TableCell align='center'></TableCell>
                       <TableCell align='center'></TableCell>
                       <TableCell align='center'></TableCell>
@@ -210,8 +266,10 @@ export default function Panel() {
                           key={index}
                           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                          <TableCell align='center'>{row.id}</TableCell>
-                          <TableCell align='center'><SolicitudDetails id_solicitud={row.id}/></TableCell>
+                          <TableCell align='center'>{row.id_solicitud}</TableCell>
+                          <TableCell align='center'>
+                            <SolicitudDetails id_solicitud={row.id_solicitud}/>
+                          </TableCell>
                           <TableCell align='center'>{row.nombre}</TableCell>
                           <TableCell align='center'>{dayjs(row.fecha).format('DD/MM/YYYY')} - {row.hora}</TableCell>
                           <TableCell align='center'>{dayjs(row.fecha_ejecucion).format('DD/MM/YYYY')}</TableCell>
@@ -220,7 +278,7 @@ export default function Panel() {
                           </TableCell>
                           <TableCell align='center'></TableCell>
                           <TableCell align='center'>
-                              <div onClick={()=>HandleEditButton(row.id)}>
+                              <div onClick={()=>HandleEditButton(row.id_solicitud)}>
                                   <ModeEditIcon 
                                       sx={{
                                           '&:hover': {

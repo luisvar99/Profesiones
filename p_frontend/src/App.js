@@ -46,7 +46,7 @@ function App() {
             <Route path="/SignUp" element={<SignUp/>}/>      
           </Routes> 
           <Routes>
-            <Route path="/MyProfile" element={<Profile/>}/>      
+            <Route path="/MyProfile/:id_user" element={<Profile/>}/>      
           </Routes> 
       </BrowserRouter>
     </AuthProvider>

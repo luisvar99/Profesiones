@@ -47,40 +47,55 @@ export default function TemporaryDrawer({state, seState, toggleDrawer}) {
               <ListItemText primary="Home" />
               </ListItemButton>
           </ListItem>
+        
         </Link>
-        <Divider />
-        {Professions.map((p, index) => (
+
+          {
+        parseInt(sessionStorage.getItem("rol"))===1
+        &&
+        <>
+        {['Mis Solicitudes'].map((text, index) => (
+          <Link key={index} to='/AdminPanel' style={{textDecoration:"none", color: "black"}}>
+            <ListItem disablePadding>
+              <ListItemButton sx={{textAlign: "center"}}>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          ))}
+        </>
+      }
+
+        {['Mi Perfil'].map((text, index) => (
+          <Link key={index} to={`/MyProfile/${sessionStorage.getItem("userID")}`} style={{textDecoration:"none", color: "black"}}>
+            <ListItem key={index} disablePadding>
+              <ListItemButton sx={{textAlign: "center"}}>
+                {/* <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon> */}
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
+        {/* <Divider /> */}
+        {/*{Professions.map((p, index) => (
         <Link key={index} to='/Home' style={{textDecoration:"none", color: "black"}}>
           <ListItem disablePadding >
             <ListItemButton sx={{textAlign: "center"}}>
-              {/* <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon> */}
               <ListItemText primary={p.nombre} />
             </ListItemButton>
           </ListItem>
         </Link>
-        ))}
+        ))} */}
       </List>
-      <Divider />
-      <List>
-        {['Mi cuenta'].map((text, index) => (
-          <ListItem key={index} disablePadding>
-            <ListItemButton sx={{textAlign: "center"}}>
-              {/* <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon> */}
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+
 
       {
         parseInt(sessionStorage.getItem("rol"))===1
         &&
         <>
-        <Divider />
+        <Divider sx={{margin:0}}/>
       <List>
         {['Admin Panel'].map((text, index) => (
           <Link key={index} to='/AdminPanel' style={{textDecoration:"none", color: "black"}}>
