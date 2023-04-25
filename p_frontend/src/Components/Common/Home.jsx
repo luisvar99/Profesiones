@@ -214,7 +214,7 @@ export default function Home() {
                         <MobileTimePicker 
                             defaultValue={tomorrow} 
                             onChange={(value) => setTime(value.get('hour') + ':' + (value.get('minute')))}
-                            minTime={dayjs().set('hour', 8)}
+                            minTime={dayjs().set('hour', 7).set('minute', 59).set('second', 59)}
                             maxTime={dayjs().set('hour', 17)}
                         />
                     </DemoItem> 
