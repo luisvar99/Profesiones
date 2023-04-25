@@ -32,6 +32,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from "@mui/material/TextField";
+import { styled } from '@mui/material/styles';
+
 
 export default function Panel() {
 
@@ -164,6 +166,20 @@ export default function Panel() {
     borderRadius: "2rem"
   };
 
+
+  const Root = styled('div')(({ theme }) => ({
+    padding: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      width:"100%",
+    },
+    /* [theme.breakpoints.up('md')]: {
+      width:"100%",
+    },
+    [theme.breakpoints.up('lg')]: {
+      width:"100%",
+    } */
+  }));
+
   useEffect(() => {
     getTotalNumberOfProfesiones();
     getTotalNumberOfUsers();
@@ -175,7 +191,7 @@ export default function Panel() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='adminPanelMainContainer'>
         <div className='adminPanelSubOneContainer'>
-          <Card sx={{ width:"80%" }}>
+          <Card sx={{ width:"100%" }}>
             <Link to="/Admin/ManageProfessions">
               <CardContent>
                 <Typography color="text.primary" gutterBottom>
@@ -188,7 +204,7 @@ export default function Panel() {
             </Link>
           </Card>
 
-          <Card sx={{ width:"80%" }}>
+          <Card sx={{ width:"100%" }}>
             <Link to="/Admin/ManageUsers">
               <CardContent>
                 <Typography color="text.primary" gutterBottom>
@@ -201,7 +217,7 @@ export default function Panel() {
             </Link>
           </Card>
 
-          <Card sx={{ width:"80%" }}>
+          <Card sx={{ width:"100%" }}>
             <Link to='/Admin/ManageWorkers'>
               <CardContent>
                 <Typography color="text.primary" gutterBottom>
@@ -216,7 +232,6 @@ export default function Panel() {
         </div>
 
         <div className='adminPanelSubTwoContainer'>
-          <div>
             <Typography sx={{ fontSize: 20 }} variant="h6" component="div">
               Solicitudes Recientes
             </Typography>
@@ -243,9 +258,12 @@ export default function Panel() {
                         bgcolor: '#F36C0E',
                         color: 'white',
                     },
+                    '@media screen and (max-width: 600px)': {
+                      display: "flex",
+                    },
                     display:"inline"
                 }}
-                /* onClick={(e)=>SearchSolicitudByInfo(e,SearchUser)} */>
+                >
                 Aceptar
             </Button>
             <Button
@@ -258,6 +276,8 @@ export default function Panel() {
                 ':hover': {
                     bgcolor: 'gray',
                     color: 'white',
+                },'@media screen and (max-width: 600px)': {
+                  display: "flex",
                 },
                 display:"inline"
             }}
@@ -265,7 +285,11 @@ export default function Panel() {
             Cancelar
         </Button>     
         </Box>
-            <TableContainer component={Paper} sx={{ width: "80%", mb: 3}}>
+            <TableContainer component={Paper} 
+                sx={{ width: "80%", mb: 3,
+                '@media screen and (max-width: 600px)': {
+                  width: "100%",
+                }}}>
                   <Table sx={{ width: "100%"}} aria-label="simple table">
                   <TableHead sx={{fontWeight:"bold" }}>
                       <TableRow sx={{border: "1px solid rgba(224, 224, 224, 1)"}}>
@@ -403,7 +427,6 @@ export default function Panel() {
               </Box>
           </Modal>
           </div>
-        </div>
       </div>
     </LocalizationProvider>
 

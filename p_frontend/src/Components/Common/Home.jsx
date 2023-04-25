@@ -130,7 +130,7 @@ export default function Home() {
             <div className="buttonGroup">
                 {Professions.map((p, index)=>(
                     <Button key={index} variant="contained" onClick={()=>FilterWorkersByProfession(p.id)}
-                        sx={{ mt: 1, mr: 2, 
+                        sx={{ mt: 1, mr: 1, 
                         borderRadius: "1rem",
                         backgroundColor: "#F36C0E",
                         padding: "8px",
@@ -138,8 +138,9 @@ export default function Home() {
                         ':hover': {
                             bgcolor: '#FF6900',
                             color: 'white',
-                        },
-                        }}>
+                        },'@media screen and (max-width: 600px)': {
+                            fontSize: "0.75rem"
+                        }}}>
                         {p.nombre}
                     </Button>
                 ))}

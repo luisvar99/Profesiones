@@ -3,6 +3,7 @@
     justify-content: center;
     grid-template-columns: 16% 16% 16% 16% 16%;
     column-gap: 2.2rem;
+    row-gap: 2.2rem;
     margin-top: 2rem;
 }
 
@@ -14,5 +15,18 @@
 
 .Cards_img{
     width:100%;
-    /* height:"100%"; */
 }
+
+@media only screen and (max-width: 600px) {
+    .buttonGroup{
+        flex-wrap: wrap;
+    }
+
+    .cards_container{
+        grid-template-columns: 45% 45%;
+        column-gap: 1.5rem;
+        row-gap: 1.5rem;
+    }
+    
+}
+

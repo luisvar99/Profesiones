@@ -151,7 +151,7 @@ const Modalstyles = {
   return (
     <div className="manageProfessionsMainContainer">
         <div className="manageProfessionsContainerOne">
-            <TableContainer component={Paper} sx={{ width: "35%"}}>
+            <TableContainer component={Paper} sx={{ width: "50%"}}>
                 <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead>
                     <TableRow>

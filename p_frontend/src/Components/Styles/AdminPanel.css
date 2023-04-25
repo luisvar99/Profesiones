@@ -20,3 +20,24 @@
     margin-top: 2rem;
     margin-left: 2rem;
 }
+
+@media only screen and (max-width: 600px) {
+    
+.adminPanelSubOneContainer{
+    grid-template-columns: 30% 30% 30%;
+    column-gap: 0.3rem;
+    justify-content: center;
+    text-align: center;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    
+.adminPanelSubOneContainer > div{
+    /* grid-template-columns: 30% 30% 30%;
+    column-gap: 0.2rem;
+    justify-content: center;
+    text-align: center; */
+    width: 80%
+    }
+}
