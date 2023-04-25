@@ -77,7 +77,7 @@ const EditSolicitud = async (req, res) => {
         //console.log("AddSolicitud : " + JSON.stringify(result.rows));
         res.json({success: true});
     } catch (error) {
-        res.json({success: false});
+        res.json({success: false, error: error.message});
         console.log(error.message);
     }
 }
@@ -93,7 +93,7 @@ const CreateSolicitud = async (req, res) => {
     
         res.json({success: true});
     } catch (error) {
-        res.json({success: false});
+        res.json({success: false, error: error.message});
         console.log(error.message);
     }
 }
@@ -105,7 +105,7 @@ const DeleteSolicitud = async (req, res) => {
         ]);
         res.json({success:true});
     } catch (error) {
-        res.json({success:false});
+        res.json({success:false, error: error.message});
         console.log(error.message);
     }
 } 
@@ -116,7 +116,7 @@ const getTotalNumberoOfSolicitudes = async (req, res) => {
         //console.log("getTotalNumberoOfSolicitudes : " + JSON.stringify(result.rows[0].count));
         res.json(result.rows[0].count);
     } catch (error) {
-        res.json({success:false});
+        res.json({success:false, error: error.message});
         console.log(error.message);
     }
 } 

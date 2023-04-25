@@ -50,7 +50,7 @@ const EditUser = async (req, res) => {
         //console.log("AddUser : " + JSON.stringify(result.rows));
         res.json({success: true});
     } catch (error) {
-        res.json({success: false});
+        res.json({success: false, error: error.message});
         console.log(error.message);
     }
 }
@@ -95,7 +95,7 @@ const AddUser = async (req, res) => {
         }
         //console.log("AddUser : " + JSON.stringify(result.rows));
     } catch (error) {
-        res.json({success: false});
+        res.json({success: false, error: error.message});
         console.log(error.message);
     }
 }
@@ -107,7 +107,7 @@ const DeleteUser = async (req, res) => {
         ]);
         res.json({success:true});
     } catch (error) {
-        res.json({success:false});
+        res.json({success:false, error: error.message});
         console.log(error.message);
     }
 } 
@@ -118,7 +118,7 @@ const getTotalNumberoOfUsers = async (req, res) => {
         //console.log("getTotalNumberoOfUsers : " + JSON.stringify(result.rows[0].count));
         res.json(result.rows[0].count);
     } catch (error) {
-        res.json({success:false});
+        res.json({success:false, error: error.message});
         console.log(error.message);
     }
 } 
