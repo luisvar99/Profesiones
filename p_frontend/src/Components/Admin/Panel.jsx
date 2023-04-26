@@ -175,8 +175,8 @@ export default function Panel() {
   useEffect(() => {
     getTotalNumberOfProfesiones();
     getTotalNumberOfUsers();
+    /* getSolicitudes() */
     getTotalNumberOfWorkers();
-    getSolicitudes()
   }, [])
 
   return (
