@@ -65,6 +65,8 @@ const DeleteProfession = async (req, res) => {
     } catch (error) {
         res.json({success: false});
         console.log(error.message);
+    }finally{
+        await db.end()
     }
 } 
 

@@ -120,6 +120,8 @@ const getTotalNumberoOfUsers = async (req, res) => {
     } catch (error) {
         res.json({success:false, error: error.message});
         console.log(error.message);
+    }finally{
+        await db.end()
     }
 } 
 
