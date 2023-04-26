@@ -99,7 +99,7 @@ const getTotalNumberoOfWorkers = async (req, res) => {
         //console.log("getTotalNumberoOfWorkers : " + JSON.stringify(result.rows[0].count));
         res.json(result.rows[0].count);
     } catch (error) {
-        res.json({success:false});
+        res.json({success:false, error: error.message});
         console.log(error.message);
     }
 } 

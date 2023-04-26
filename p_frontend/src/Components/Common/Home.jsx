@@ -24,7 +24,7 @@ export default function Home() {
     const [Workers, setWorkers] = useState([])
     const [Professions, setProfessions] = useState([])
     const [openModal, setOpenModal] = useState(false); 
-    const [Date, setDate] = useState(dayjs().format('DD/MM/YYYY') ); 
+    const [Date, setDate] = useState(dayjs().format('YYYY/MM/DD') ); 
     const [Time, setTime] = useState(dayjs().get('hour')+':'+ dayjs().get('minute')); 
     const [Status, setStatus] = useState(0); 
     /* const [FechaEjecucion, setFechaEjecucion] = useState(dayjs().format('DD/MM/YYYY'));  */
@@ -74,6 +74,7 @@ export default function Home() {
     const CreateSolicitud = async (e) =>{
         e.preventDefault()
         setShowSpinnerLoader(true)
+        console.log(Date);
         try {
             const result = await axios.post(Url+'CreateSolicitud',{
                 id_user: sessionStorage.getItem("userID"),
@@ -82,12 +83,13 @@ export default function Home() {
                 fecha: Date,
                 hora: Time,
                 status: 0,
-                fecha_ejecucion: dayjs().format('DD/MM/YYYY')
+                fecha_ejecucion: dayjs().format('YYYY/MM/DD')
             })
             if(result.data.success===true){
                 setShowSpinnerLoader(false)
                 setSolicitudAdded(true)
             }else{
+                console.log(result.data.error);
                 setShowSpinnerLoader(false)
                 setSolicitudAdded(false)
             }
@@ -205,7 +207,7 @@ export default function Home() {
                         maxDate={MaxDate}
                         minDate={tomorrow}
                         views={['year', 'month', 'day']}
-                        onChange={(value)=> setDate(value.format('DD/MM/YYYY'))}
+                        onChange={(value)=> setDate(value.format('YYYY/MM/DD'))}
                         format='DD/MM/YYYY'
                     />
                 </DemoItem>

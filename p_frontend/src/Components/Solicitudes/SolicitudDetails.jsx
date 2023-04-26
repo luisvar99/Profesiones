@@ -12,6 +12,7 @@ export default function SolicitudDetails({id_solicitud}) {
             const result = await axios.get(Url + `GetSolicitudByID/${id_solicitud}`)
             setWorker(result.data[0].nombre_completo)
             setUser(result.data[1].nombre_completo)
+            //console.log("GetSolicitudByID:" + JSON.stringify(result.data));
         } catch (error) {
             console.log(error.message);
         }
@@ -24,8 +25,8 @@ export default function SolicitudDetails({id_solicitud}) {
 
   return (
     <>
-        <p style={{margin:0}}>Usuario: {User}</p>
-        <p style={{margin:0}}>Trabajador: {Worker} </p>
+        <p style={{margin:0}}>Usuario: {Worker}</p>
+        <p style={{margin:0}}>Trabajador: {User} </p>
     </>
   )
 }

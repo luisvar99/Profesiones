@@ -43,7 +43,7 @@ export default function Panel() {
   const [NumberOfWorkers, setNumberOfWorkers] = useState(0)
   const [Solicitudes, setSolicitudes] = useState([])
   const [openModal, setOpenModal] = useState(false); 
-  const [SolicitudDate, setSolicitudDate] = useState(""); 
+  const [SolicitudDate, setSolicitudDate] = useState(dayjs().format('YYYY/MM/DD') ); 
   const [SolicitudTime, setSolicitudTime] = useState("");
   const [SolicitudStatus, setSolicitudStatus] = useState(0);
   const [SelectedSolicitudID, setSelectedSolicitudID] = useState(0);
@@ -64,34 +64,40 @@ export default function Panel() {
     try {
       const result = await axios.get(Url+'getTotalNumberoOfProfesiones');
       setNumberOfProfessions(result.data)
-      
+      console.log(result.data)
     } catch (error) {
       console.log(error.message);
+      alert(error.message);
     }
   }
   const getTotalNumberOfUsers = async () => {
     try {
       const result = await axios.get(Url+'getTotalNumberoOfUsers');
       setNumberOfUsers(result.data)
-      
+      console.log(result.data)
     } catch (error) {
       console.log(error.message);
+      alert(error.message);
     }
   }
   const getTotalNumberOfWorkers = async () => {
     try {
       const result = await axios.get(Url+'getTotalNumberOfWorkers');
       setNumberOfWorkers(result.data)
-      
+      console.log(result.data)
     } catch (error) {
       console.log(error.message);
+      alert(error.message);
     }
   }
-  const getSolicitudes = async () => {
+
+  const getSolicitudes = async (resetForm) => {
     try {
       const result = await axios.get(Url+'getSolicitudes');
       setSolicitudes(result.data)
-      inputSearchSolicitud.current.reset()
+      if(resetForm===true){
+        inputSearchSolicitud.current.reset()
+      }
       
     } catch (error) {
       console.log(error.message);
@@ -166,20 +172,6 @@ export default function Panel() {
     borderRadius: "2rem"
   };
 
-
-  const Root = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1),
-    [theme.breakpoints.down('sm')]: {
-      width:"100%",
-    },
-    /* [theme.breakpoints.up('md')]: {
-      width:"100%",
-    },
-    [theme.breakpoints.up('lg')]: {
-      width:"100%",
-    } */
-  }));
-
   useEffect(() => {
     getTotalNumberOfProfesiones();
     getTotalNumberOfUsers();
@@ -197,9 +189,17 @@ export default function Panel() {
                 <Typography color="text.primary" gutterBottom>
                   Profesiones
                 </Typography>
-                <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
-                  {NumberOfProfessions}
-                </Typography>
+                {
+                  NumberOfProfessions!==0 || NumberOfProfessions
+                  ?
+                  <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
+                    <>{NumberOfProfessions}</>
+                  </Typography>
+                  :
+                  <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
+                    Cargando...
+                  </Typography>
+                }
             </CardContent>
             </Link>
           </Card>
@@ -210,9 +210,17 @@ export default function Panel() {
                 <Typography color="text.primary" gutterBottom>
                   Usuarios
                 </Typography>
-                <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
-                  {NumberOfUsers}
-                </Typography>
+                {
+                  NumberOfUsers!==0 || NumberOfUsers
+                  ?
+                  <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
+                    <>{NumberOfUsers}</>                 
+                  </Typography>
+                  :
+                  <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
+                    Cargando...
+                  </Typography>
+                }
               </CardContent>
             </Link>
           </Card>
@@ -223,15 +231,32 @@ export default function Panel() {
                 <Typography color="text.primary" gutterBottom>
                   Trabajadores
                 </Typography>
-                <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
-                  {NumberOfWorkers}
-                </Typography>
+                {
+                  NumberOfWorkers!==0 || NumberOfWorkers
+                  ?
+                  <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
+                    <>{NumberOfWorkers}</>
+                  </Typography>
+                  :
+                  <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h6" component="div">
+                    Cargando...
+                  </Typography>
+                }
               </CardContent>
             </Link>
           </Card>
         </div>
 
         <div className='adminPanelSubTwoContainer'>
+          {
+            Solicitudes.length===0
+            ?
+            <Typography sx={{ fontSize: 20 }} variant="h6" component="div">
+              Cargando Solicitudes Recientes...
+            </Typography>
+            :
+            <>
+            
             <Typography sx={{ fontSize: 20 }} variant="h6" component="div">
               Solicitudes Recientes
             </Typography>
@@ -281,7 +306,7 @@ export default function Panel() {
                 },
                 display:"inline"
             }}
-            onClick={()=>getSolicitudes()}>
+            onClick={()=>getSolicitudes(true)}>
             Cancelar
         </Button>     
         </Box>
@@ -348,6 +373,8 @@ export default function Panel() {
                   </TableBody>
                   </Table>
               </TableContainer>
+              </>
+          }
               <Modal
             open={openModal}
             onClose={handleCloseModal}
@@ -363,7 +390,7 @@ export default function Panel() {
                           maxDate={MaxDate}
                           minDate={today}
                           views={['year', 'month', 'day']}
-                          onChange={(value)=> setSolicitudDate(value.format('DD/MM/YYYY'))}
+                          onChange={(value)=> setSolicitudDate(value.format('YYYY/MM/DD'))}
                           format='DD/MM/YYYY'
                           value={dayjs(SolicitudDate)}
                       />
