@@ -96,8 +96,10 @@ const DeleteWorker = async (req, res) => {
 const getTotalNumberoOfWorkers = async (req, res) => {
     try {
         const result = await db.query('SELECT COUNT(*) FROM users WHERE rol=3');
+        const result2 = await db.query('SELECT COUNT(*) FROM profesiones');
+        const result3 = await db.query('SELECT COUNT(*) FROM users');
         //console.log("getTotalNumberoOfWorkers : " + JSON.stringify(result.rows[0].count));
-        res.json(result.rows[0].count);
+        res.json({workers: result.rows[0].count, profesiones: result2.rows[0].count, users: result3.rows[0].count});
     } catch (error) {
         res.json({success:false, error: error.message});
         console.log(error.message);

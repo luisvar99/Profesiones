@@ -60,6 +60,18 @@ export default function Panel() {
     setOpenModal(false)
   }
 
+  const getStadistics = async () => {
+    try {
+      const result = await axios.get(Url+'getStadistics');
+      setNumberOfUsers(result.data.usuarios)
+      setNumberOfWorkers(result.data.workers)
+      //console.log(result.data)
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    }
+  }
+
   const getTotalNumberOfProfesiones = async () => {
     try {
       const result = await axios.get(Url+'getTotalNumberoOfProfesiones');
@@ -70,6 +82,8 @@ export default function Panel() {
       alert(error.message);
     }
   }
+
+  /*
   const getTotalNumberOfUsers = async () => {
     try {
       const result = await axios.get(Url+'getTotalNumberoOfUsers');
@@ -89,7 +103,7 @@ export default function Panel() {
       console.log(error.message);
       alert(error.message);
     }
-  }
+  } */
 
   const getSolicitudes = async (resetForm) => {
     try {
@@ -174,9 +188,10 @@ export default function Panel() {
 
   useEffect(() => {
     getTotalNumberOfProfesiones();
-    getTotalNumberOfUsers();
-    /* getSolicitudes() */
-    getTotalNumberOfWorkers();
+    /* getTotalNumberOfUsers(); */
+    getStadistics()
+    getSolicitudes()
+    /* getTotalNumberOfWorkers(); */
   }, [])
 
   return (
@@ -249,7 +264,7 @@ export default function Panel() {
 
         <div className='adminPanelSubTwoContainer'>
           {
-            Solicitudes.length===0
+            Solicitudes.length===0 && NumberOfProfessions>0 && NumberOfUsers>0
             ?
             <Typography sx={{ fontSize: 20 }} variant="h6" component="div">
               Cargando Solicitudes Recientes...

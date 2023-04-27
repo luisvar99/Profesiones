@@ -123,5 +123,19 @@ const getTotalNumberoOfUsers = async (req, res) => {
     }
 } 
 
+const getStadistics = async (req, res) => {
+    try {
+        const result = await db.query(`SELECT COUNT(1) FILTER (WHERE rol = 2) AS usuarios, 
+        COUNT(1) FILTER (WHERE rol = 3) AS workers
+        FROM users`);
+        //console.log("getTotalNumberoOfUsers : " + JSON.stringify(result.rows[0].count));
+        res.json(result.rows[0]);
+        console.log(result.rows[0]);
+    } catch (error) {
+        res.json({success:false, error: error.message});
+        console.log(error.message);
+    }
+} 
+
 module.exports = {getUsers, AddUser, getTotalNumberoOfUsers, getUserById, 
-    EditUser, DeleteUser, getUserByInfo}
+    EditUser, DeleteUser, getUserByInfo, getStadistics}
