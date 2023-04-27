@@ -14,7 +14,7 @@ const getSolicitudes = async (req, res) => {
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
     } catch (error) {
-        console.log(error.message);
+        console.log("error getSolicitudes: " + error.message);
     }
 } 
 
@@ -31,7 +31,7 @@ const getUserSolicitudes = async (req, res) => {
 
         res.json(result.rows);
     } catch (error) {
-        console.log(error.message);
+        console.log("error getUserSolicitudes: " + error.message);
     }
 } 
 
@@ -47,7 +47,7 @@ const getSolicitudById = async (req, res) => {
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
     } catch (error) {
-        console.log(error.message);
+        console.log("error getSolicitudById: " + error.message);
     }
 } 
 
@@ -65,7 +65,7 @@ const getSolicitudByInfo = async (req, res) => {
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
     } catch (error) {
-        console.log(error.message);
+        console.log("error getSolicitudByInfo" + error.message);
     }
 } 
 
@@ -117,7 +117,7 @@ const getTotalNumberoOfSolicitudes = async (req, res) => {
         res.json(result.rows[0].count);
     } catch (error) {
         res.json({success:false, error: error.message});
-        console.log(error.message);
+        console.log("getTotalNumberoOfSolicitudes: " + error.message);
     }
 } 
 

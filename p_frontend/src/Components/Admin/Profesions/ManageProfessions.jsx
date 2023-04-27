@@ -21,7 +21,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Modal from '@mui/material/Modal';
 import { fabClasses } from '@mui/material';
-
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function ManageProfessions() {
 
@@ -151,61 +151,78 @@ const Modalstyles = {
   return (
     <div className="manageProfessionsMainContainer">
         <div className="manageProfessionsContainerOne">
-            <TableContainer component={Paper} sx={{ width: "50%"}}>
-                <Table sx={{ width: "100%" }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                    <TableCell align='center' sx={{fontSize:"1.2rem"}}>Nombre</TableCell>
-                    <TableCell align='center'></TableCell>
-                    <TableCell align='center'></TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {Professions.map((row, index) => (
-                    <TableRow
-                        key={index}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                        <TableCell align='center'>{row.nombre}</TableCell>
-                        <TableCell align='center'>
-                            <div onClick={()=>HandleEditButton(row.id)}>
-                                <ModeEditIcon 
-                                    sx={{
-                                        '&:hover': {
-                                            cursor: 'pointer',
-                                        }
-                                    }}>
-                                </ModeEditIcon>
-                            </div>
-                        </TableCell>
-                        <TableCell align='center'>
-                            <div onClick={()=>handleOpenModal(row.id)}>
-                                <DeleteIcon 
-                                    sx={{
-                                        '&:hover': {
-                                            cursor: 'pointer',
-                                        }
+        {
+            Professions.length===0
+            ?
+            <Typography sx={{ fontSize: 20 }} variant="h6" component="div">
+              Cargando Categorias... 
+              <CircularProgress style={{'color': '#F36C0E'}}/>
+            </Typography>
+            :
+            <>
+                <TableContainer component={Paper} 
+                sx={{ width: "50%",
+                    '@media screen and (max-width: 600px)': {
+                      width: "100%",
+                    }}}>
+                    <Table sx={{ width: "100%" }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                        <TableCell align='center' sx={{fontSize:"1.2rem"}}>Nombre</TableCell>
+                        <TableCell align='center'></TableCell>
+                        <TableCell align='center'></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Professions.map((row, index) => (
+                        <TableRow
+                            key={index}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell align='center'>{row.nombre}</TableCell>
+                            <TableCell align='center'>
+                                <div onClick={()=>HandleEditButton(row.id)}>
+                                    <ModeEditIcon 
+                                        sx={{
+                                            '&:hover': {
+                                                cursor: 'pointer',
+                                            }
                                         }}>
-                                </DeleteIcon>
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-                </Table>
-            </TableContainer>
+                                    </ModeEditIcon>
+                                </div>
+                            </TableCell>
+                            <TableCell align='center'>
+                                <div onClick={()=>handleOpenModal(row.id)}>
+                                    <DeleteIcon 
+                                        sx={{
+                                            '&:hover': {
+                                                cursor: 'pointer',
+                                            }
+                                            }}>
+                                    </DeleteIcon>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                    </Table>
+                </TableContainer>
             <div style={{height:"3rem"}} onClick={()=> {setModalForm(true); setShowAddingForm(true); setShowEditForm(false); setProfessionName("")}}>
                 <AddCircleIcon sx={{fontSize:'3rem', 
                                     marginLeft: "1rem", 
                                     color:"#F36C0E", 
                                     '&:hover': {
                                         cursor: 'pointer',
+                                    },
+                                    '@media screen and (max-width: 600px)': {
+                                        marginLeft: "0.2rem",
                                     }
-                                    }}
-                                    >
+                                }}
+                                >
                 </AddCircleIcon>
             </div>
-            
+        </>
+        }
         </div>
 
         <Snackbar open={SuccessOpen} autoHideDuration={6000} onClose={handleClose} 

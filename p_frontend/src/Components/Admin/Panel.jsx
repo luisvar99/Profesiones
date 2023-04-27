@@ -62,12 +62,12 @@ export default function Panel() {
 
   const getStadistics = async () => {
     try {
-      /* const result = await axios.get(Url+'getStadistics');
+      const result = await axios.get(Url+'getStadistics');
       setNumberOfUsers(result.data.usuarios)
       setNumberOfWorkers(result.data.workers)
       if(result.data.success===false){
         console.log(result.data)
-      } */
+      }
     } catch (error) {
       console.log(error.message);
       alert(error.message);
@@ -176,7 +176,7 @@ export default function Panel() {
     e.preventDefault()
     const result = await axios.get(Url+`getSolicitudByInfo/${user_cedula}`)
     setSolicitudes(result.data)
-    //console.log(result.data)
+    console.log(result.data)
   }
 
   const Modalstyles = {
@@ -270,10 +270,11 @@ export default function Panel() {
 
         <div className='adminPanelSubTwoContainer'>
           {
-            Solicitudes.length===0 && NumberOfProfessions>0 && NumberOfUsers>0
+            Solicitudes.length===0
             ?
             <Typography sx={{ fontSize: 20 }} variant="h6" component="div">
-              Cargando Solicitudes Recientes...
+              Cargando Solicitudes Recientes... 
+              <CircularProgress style={{'color': '#F36C0E'}}/>
             </Typography>
             :
             <>
