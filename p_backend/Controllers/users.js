@@ -133,7 +133,7 @@ const getStadistics = async (req, res) => {
         console.log(result.rows[0]);
     } catch (error) {
         res.json({success:false, error: error.message});
-        console.log(error.message);
+        console.log("error: " + error.message);
     }
 } 
 

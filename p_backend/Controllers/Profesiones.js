@@ -28,6 +28,7 @@ const getTotalNumberoOfProfesiones = async (req, res) => {
         //console.log("getTotalNumberoOfProfesiones : " + JSON.stringify(result.rows[0].count));
         res.json(result.rows[0].count);
     } catch (error) {
+        res.json({success:false, error: error.message});
         console.log(error.message);
     }
 } 

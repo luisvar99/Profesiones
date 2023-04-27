@@ -62,10 +62,12 @@ export default function Panel() {
 
   const getStadistics = async () => {
     try {
-      const result = await axios.get(Url+'getStadistics');
+      /* const result = await axios.get(Url+'getStadistics');
       setNumberOfUsers(result.data.usuarios)
       setNumberOfWorkers(result.data.workers)
-      //console.log(result.data)
+      if(result.data.success===false){
+        console.log(result.data)
+      } */
     } catch (error) {
       console.log(error.message);
       alert(error.message);
@@ -76,7 +78,10 @@ export default function Panel() {
     try {
       const result = await axios.get(Url+'getTotalNumberoOfProfesiones');
       setNumberOfProfessions(result.data)
-      console.log(result.data)
+      //console.log(result.data)
+      if(result.data.success===false){
+        console.log(result.data)
+      }
     } catch (error) {
       console.log(error.message);
       alert(error.message);
