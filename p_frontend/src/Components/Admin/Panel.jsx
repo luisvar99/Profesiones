@@ -77,10 +77,11 @@ export default function Panel() {
   const getTotalNumberOfProfesiones = async () => {
     try {
       const result = await axios.get(Url+'getTotalNumberoOfProfesiones');
-      setNumberOfProfessions(result.data)
       //console.log(result.data)
       if(result.data.success===false){
         console.log(result.data)
+      }else{
+        setNumberOfProfessions(result.data)
       }
     } catch (error) {
       console.log(error.message);
