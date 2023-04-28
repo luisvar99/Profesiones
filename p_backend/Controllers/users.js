@@ -5,9 +5,9 @@ const getUsers = async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM users');
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
-        res.json(result.rows);
+        res.json({rows: result.rows, success:true});
     } catch (error) {
-        console.log(error.message);
+        console.log({error: error.message, success:false});
     }
 } 
 
@@ -23,6 +23,7 @@ const getUserById = async (req, res) => {
 } 
 
 const getUserByInfo = async (req, res) => {
+    console.log("getUserByInfo: " + req.params.cedula);
     try {
         const result = await db.query('SELECT * FROM users WHERE cedula = ($1)',
         [req.params.cedula]);
@@ -130,7 +131,7 @@ const getStadistics = async (req, res) => {
         FROM users`);
         //console.log("getTotalNumberoOfUsers : " + JSON.stringify(result.rows[0].count));
         res.json(result.rows[0]);
-        console.log("getStadistics->  " + result.rows[0]);
+        //console.log("getStadistics->  " + result.rows[0]);
     } catch (error) {
         res.json({success:false, error: error.message});
         console.log("error getStadistics-> " + error.message);

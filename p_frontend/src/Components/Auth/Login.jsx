@@ -13,6 +13,7 @@ import React, { useContext, useState } from 'react'
 import AuthContext from '../Context/AuthContext';
 import axios from "axios"
 import {Url} from '../Common/Url'
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -24,9 +25,11 @@ export default function Login() {
     const [WrongPassword, setWrongPassword] = useState(false); 
     const [WrongUsername, setWrongUsername] = useState(false); 
     const [ErrorMessage, setErrorMessage] = useState(""); 
+    const [LoggingIn, setLoggingIn] = useState(false); 
 
     const Login = async (event) => {
         event.preventDefault();
+        setLoggingIn(true)
         try {
             const result = await axios.post(Url+"login",{
                 username: Username,
@@ -44,17 +47,21 @@ export default function Login() {
                 navigate("/Home")
                 sessionStorage.setItem("rol", 2)
               }
+              setLoggingIn(false)
             }else if(result.data.wrongUsername){
                 setErrorMessage("Usuario Invalido")
                 setWrongUsername(true)
                 setOpen(true)
+                setLoggingIn(false)
               }else if(result.data.wrongPassword){
                 setErrorMessage("Contrasena Invalida")
                 setWrongPassword(true)
                 setOpen(true)
+                setLoggingIn(false)
             }else{
                 setErrorMessage("Ha ocurrido un error")
                 setOpen(true)
+                setLoggingIn(false)
             }
             //Con esto se forza el re-render de los componentes, es este caso importa el componente
             //del navbar para que muestre el user loggeado que esta en sessionStorage
@@ -62,6 +69,7 @@ export default function Login() {
 
         } catch (error) {
             setErrorMessage("Ha ocurrido un error")
+            setLoggingIn(false)
         }
         
   };
@@ -141,6 +149,9 @@ export default function Login() {
           >
             Iniciar sesion
           </Button>
+          <div style={{display:"flex", justifyContent: "center", marginBottom:"1rem"}}>
+            {LoggingIn && <CircularProgress style={{'color': '#F36C0E'}}/>}
+          </div>
           <div>
             <Link href="/Home">
               Olvidaste tu contrasena?

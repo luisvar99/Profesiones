@@ -24,6 +24,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function ManageUsers() {
 
@@ -50,6 +51,10 @@ export default function ManageUsers() {
     const [ShowEditForm, setShowEditForm] = useState(false); 
     const [ModalForm, setModalForm] = useState(false); 
     const [SearchUser, setSearchUser] = useState(""); 
+    const [ShowSpinner, setShowSpinner] = useState(true);
+    const [ErrorLoadingData, setErrorLoadingData] = useState(false);
+    const [InvalidSearchUser, setInvalidSearchUser] = useState(false);
+
 
     const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = (id) => {
@@ -71,15 +76,29 @@ export default function ManageUsers() {
     };
 
     const GetUsers = async () =>{
+        setShowSpinner(true)
         const result = await axios.get(Url+'getUsers')
-        setUsers(result.data)
+        if(result.data.success===true){
+            setUsers(result.data.rows)
+            setShowSpinner(false)
+        }else{
+            setErrorLoadingData(true)
+            setShowSpinner(false)
+        }
         //console.log(result.data)
     }
 
     const SearchUserByInfo = async (e,SearchUser) =>{
         e.preventDefault()
-        const result = await axios.get(Url+`getUserByInfo/${SearchUser}`)
-        setUsers(result.data)
+        if(!SearchUser || SearchUser===""){
+            setInvalidSearchUser(true)
+        }else{
+            setShowSpinner(true)
+            const result = await axios.get(Url+`getUserByInfo/${SearchUser}`)
+            setUsers(result.data)
+            setShowSpinner(false)
+            setInvalidSearchUser(false)
+        }
         //console.log(result.data)
     }
 
@@ -254,36 +273,48 @@ export default function ManageUsers() {
 
 
   return (
-    <div className="manageProfessionsMainContainer">
-        <Box component="form" onSubmit={(e)=>SearchUserByInfo(e, UserId)} sx={{ mt: 1, display:"flex", alignItems:"center"}}>
-            <TextField
-                margin="normal"
-                required
-                label="Cedula"
-                autoFocus
-                InputProps={{ sx: { borderRadius: 35, paddingLeft:"0.5rem"} }}
-                onChange={(e) => setSearchUser(e.target.value)}
-                sx={{marginLeft:"2rem"}}
-                type='number'
-                />
-            <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 3, mb: 2, ml: 2, 
-                    borderRadius: 35,
-                    backgroundColor: "#F36C0E",
-                    padding: "14.5px 2rem",
-                    fontSize: "14px" ,
-                    ':hover': {
-                        bgcolor: '#F36C0E',
-                        color: 'white',
-                    },
-                    display:"inline"
-                }}
-                onClick={(e)=>SearchUserByInfo(e,SearchUser)}>
-                Aceptar
-            </Button>   
-        </Box>
+    <div className={ShowSpinner===true ? "manageProfessionsMainContainerSpinner" : "manageProfessionsMainContainer"}>
+        {
+            ShowSpinner===true
+            ?
+            <>
+                <div style={{display:"flex", justifyContent: "center", marginBottom:"1rem"}}>
+                    {ShowSpinner && <CircularProgress style={{'color': '#F36C0E'}}/>}
+                </div>
+            </>
+            :
+            <>
+            <Box component="form" onSubmit={(e)=>SearchUserByInfo(e, UserId)} sx={{ mt: 1, display:"flex", alignItems:"center"}}>
+                <TextField
+                    margin="normal"
+                    required
+                    label="Cedula"
+                    autoFocus
+                    InputProps={{ sx: { borderRadius: 35, paddingLeft:"0.5rem"}, inputProps:{min: 0, padding:0} }}
+                    onChange={(e) => setSearchUser(e.target.value)}
+                    sx={{marginLeft:"2rem"}}
+                    type='number'
+                    helperText={InvalidSearchUser && "Cedula Obigatoria"}
+                    error={InvalidSearchUser}
+                    />
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2, ml: 2, 
+                        borderRadius: 35,
+                        backgroundColor: "#F36C0E",
+                        padding: "14.5px 2rem",
+                        fontSize: "14px" ,
+                        ':hover': {
+                            bgcolor: '#F36C0E',
+                            color: 'white',
+                        },
+                        display:"inline"
+                    }}
+                    onClick={(e)=>SearchUserByInfo(e,SearchUser)}>
+                    Aceptar
+                </Button>   
+            </Box>
         <div className="manageProfessionsContainerOne">
         <div style={{height:"3rem"}} onClick={()=> {setModalForm(true); setShowAddingForm(true); setShowEditForm(false); setUserNames("")}}>
                 <AddCircleIcon 
@@ -296,7 +327,7 @@ export default function ManageUsers() {
                 >
                 </AddCircleIcon>
             </div>
-            <TableContainer component={Paper} sx={{ width: "95%"}}>
+            <TableContainer component={Paper} sx={{ width: "95%", mb:2}}>
                 <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
@@ -362,8 +393,11 @@ export default function ManageUsers() {
                 </TableBody>
                 </Table>
             </TableContainer>
-            
-        </div>
+            </div>
+        </>
+        }
+
+        {ErrorLoadingData && <h6>Ha ocurrido un error obteniendo a los usuarios</h6>}
 
         <Snackbar open={SuccessOpen} autoHideDuration={6000} onClose={handleClose} 
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }} TransitionComponent="SlideTransition">
@@ -459,10 +493,10 @@ export default function ManageUsers() {
                                 fullWidth
                                 label="Nombres"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"}}}
-                                onChange={(e) => setUserNames(e.target.value)}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"0.5rem"} }}
+                                onChange={(e) => setUserNames(e.target.value)} 
                                 value={UserNames}
-                                sx={{width:"95%", mt:0.5}}
+                                sx={{width:"95%", mt:0.4}}
                             />
                             <TextField
                                 margin="normal"
@@ -470,7 +504,7 @@ export default function ManageUsers() {
                                 fullWidth
                                 label="Apellidos"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"1rem", paddingTop:"0rem"} }}
                                 onChange={(e) => setUserLastNames(e.target.value)}
                                 value={UserLastNames}
                                 sx={{width:"95%" , mt:0.5}}
@@ -482,7 +516,7 @@ export default function ManageUsers() {
                                 label="Usuario"
                                 disabled={ShowEditForm}
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserName(e.target.value)}
                                 value={UserName}
                                 sx={{width:"95%" , mt:0.5}}
@@ -493,7 +527,7 @@ export default function ManageUsers() {
                                 fullWidth
                                 label="Contrasena"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserPassword(e.target.value)}
                                 value={UserPassword}
                                 sx={{width:"95%" , mt:0.5}}
@@ -526,9 +560,9 @@ export default function ManageUsers() {
                                 fullWidth
                                 label="Descripcion"
                                 multiline
-                                rows="4"
+                                rows="3"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
                                 onChange={(e) => setWorkerDescription(e.target.value)}
                                 value={WorkerDescription}
                                 sx={{width:"95%" , mt:0.5}}
@@ -538,7 +572,7 @@ export default function ManageUsers() {
                                 required
                                 fullWidth
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => ConvertImageToBase64(e.target.files[0])}
                                 type='file'
                                 sx={{width:"95%" , mt:0.5}}
@@ -551,7 +585,7 @@ export default function ManageUsers() {
                                 fullWidth
                                 label="Cedula"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserCedula(e.target.value)}
                                 value={UserCedula}
                                 sx={{width:"95%" , mt:0.5}}
@@ -562,7 +596,7 @@ export default function ManageUsers() {
                                 fullWidth
                                 label="Telefono"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserTelf(e.target.value)}
                                 value={UserTelf}
                                 type='number'
@@ -574,7 +608,7 @@ export default function ManageUsers() {
                                 fullWidth
                                 label="Correo"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserEmail(e.target.value)}
                                 value={UserEmail}
                                 type='email'
@@ -588,7 +622,7 @@ export default function ManageUsers() {
                                 rows="4"
                                 label="Direccion"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: "2rem", paddingLeft:"1rem"} }}
                                 onChange={(e) => setUserAddress(e.target.value)}
                                 value={UserAddress}
                                 type='email'
@@ -604,7 +638,7 @@ export default function ManageUsers() {
                                 disabled={ShowEditForm}
                                 label="Zonas de trabajo"
                                 autoFocus
-                                InputProps={{ sx: { borderRadius: 35, paddingLeft:"1rem"} }}
+                                InputProps={{ inputProps:{style: {padding:10}}, sx: { borderRadius: 35, paddingLeft:"1rem"} }}
                                 onChange={(e) => setWorkerZones(e.target.value)}
                                 value={WorkerZones}
                                 sx={{width:"95%" , mt:0.5}}
@@ -640,7 +674,7 @@ export default function ManageUsers() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 1, mb: 1, 
+                            sx={{ mt: 1, mb: 0.5, 
                                 borderRadius: 35,
                                 backgroundColor: "#F36C0E",
                                 padding: "8px",

@@ -34,6 +34,7 @@ export default function ManageProfessions() {
     const [ShowAddingForm, setShowAddingForm] = useState(false); 
     const [ShowEditForm, setShowEditForm] = useState(false); 
     const [ModalForm, setModalForm] = useState(false); 
+    const [ShowSpinner, setShowSpinner] = useState(false);
 
     const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = (id) => {
@@ -51,6 +52,7 @@ export default function ManageProfessions() {
 
     const AddOrEditProfession = async (e,profession_id) =>{
         e.preventDefault()
+        setShowSpinner(true)
         try {
             if(ShowAddingForm){
                 const result = await axios.post(Url+'AddProfesion',{
@@ -66,6 +68,7 @@ export default function ManageProfessions() {
                     setMessage("Ha ocurrido un error Agregando la Categoria")
                     setSeverity("error")
                     setSuccessOpen(true)
+                    setShowSpinner(false)
                 }
             }else if(ShowEditForm){
                 const result = await axios.put(Url + 'UpdateProfession',{
@@ -81,6 +84,7 @@ export default function ManageProfessions() {
                     setMessage("Ha ocurrido un error editando la Categoria")
                     setSeverity("error")
                     setSuccessOpen(true)
+                    setShowSpinner(false)
                 }
             }
         }
@@ -88,6 +92,7 @@ export default function ManageProfessions() {
             setMessage("Ha ocurrido un error editando la Categoria")
             setSeverity("error")
             setSuccessOpen(true)
+            setShowSpinner(false)
         }
       }
 
@@ -109,6 +114,7 @@ export default function ManageProfessions() {
 
     const DeleteProfession = async (profession_id) => {
         try {
+            setShowSpinner(true)
             const result = await axios.delete(Url + `deleteProfesion/${profession_id}`)
             if(result.data.success===true){
                 setProfessions(Professions.filter(p=>p.id!==profession_id))
@@ -116,17 +122,20 @@ export default function ManageProfessions() {
                 setSeverity("success")
                 setSuccessOpen(true)
                 setOpenModal(false)
+                setShowSpinner(false)
             }else{
                 setMessage("Ha ocurrido un error eliminando la categoria")
                 setSeverity("error")
                 setSuccessOpen(true)
                 setOpenModal(false)
+                setShowSpinner(false)
             }
         } catch (error) {
             setMessage("Ha ocurrido un error eliminando la categoria")
             setSeverity("error")
             setSuccessOpen(true)
             setOpenModal(false)
+            setShowSpinner(false)
         }
 
     }
@@ -280,6 +289,9 @@ const Modalstyles = {
                     Cancelar
             </Button>
           </div>
+            <div style={{display:"flex", justifyContent: "center"}}>
+                {ShowSpinner && <CircularProgress style={{'color': '#F36C0E'}}/>}
+            </div>
         </Box>
       </Modal>
 
@@ -341,6 +353,9 @@ const Modalstyles = {
                                 {ShowAddingForm && "Aceptar"}  
                                 {ShowEditForm && "Guardar Cambios"}  
                             </Button>
+                            <div style={{display:"flex", justifyContent: "center", marginBottom:"1rem"}}>
+                                {ShowSpinner && <CircularProgress style={{'color': '#F36C0E'}}/>}
+                            </div>
                     </Box>
                 </Box>
             </Container>

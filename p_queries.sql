@@ -30,4 +30,9 @@ SELECT s.id AS id_solicitud, u.id AS id_user, s.status,
         INNER JOIN profesiones p ON p.id = s.id_profesion
         INNER JOIN users u ON u.id = s.id_user OR u.id = s.id_trabajador 
         WHERE s.id = (1)
+	
+SELECT * FROM users
+SELECT COUNT(*) AS usuarios, COUNT(1) FILTER (WHERE rol = 3) AS workers
+FROM users
+
 		
