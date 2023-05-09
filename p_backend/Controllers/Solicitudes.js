@@ -9,7 +9,7 @@ const getSolicitudes = async (req, res) => {
         from solicitudes s
         INNER JOIN profesiones p ON p.id = s.id_profesion
         INNER JOIN users u ON u.id = s.id_user
-        ORDER BY id_solicitud
+        ORDER BY id_solicitud DESC
         LIMIT 10`);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
         res.json(result.rows);
@@ -27,7 +27,7 @@ const getUserSolicitudes = async (req, res) => {
         INNER JOIN profesiones p ON p.id = s.id_profesion
         INNER JOIN users u ON u.id = s.id_trabajador
         WHERE s.id_user = ($1)
-        ORDER BY id_solicitud`,[req.params.id]);
+        ORDER BY id_solicitud DESC`,[req.params.id]);
 
         res.json(result.rows);
     } catch (error) {

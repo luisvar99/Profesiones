@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import { MobileTimePicker } from '@mui/x-date-pickers';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircularProgress from '@mui/material/CircularProgress';
+import ErrorIcon from '@mui/icons-material/Error';
 
 export default function Home() {
     
@@ -31,9 +32,12 @@ export default function Home() {
     const [WorkerID, setWorkerID] = useState(0); 
     const [WorkerIdProfesion, setWorkerIdProfesion] = useState(0); 
     const [SolicitudAdded, setSolicitudAdded] = useState(false)
+    const [SolicitudError, setSolicitudError] = useState(false)
     const [ShowSpinnerLoader, setShowSpinnerLoader] = useState(false)
+    const [LoadingWorkers, setLoadingWorkers] = useState(false)
+    const [LoadingProfessions, setLoadingProfessions] = useState(false)
 
-    const tomorrow = dayjs().add(1, 'day');
+    const tomorrow = dayjs().add(2, 'day').set("hour", 8).set("minute",	0);
     const MaxDate = dayjs().add(5, 'day');
 
     const handleCloseModal = () => {
@@ -42,8 +46,14 @@ export default function Home() {
 
     const GetWorkers = async () =>{
         try {
+            setLoadingWorkers(true)
             const result = await axios.get(Url+'getWorkers')
-            setWorkers(result.data)
+            if(result.data.success===true){
+                setWorkers(result.data.rows)
+                setLoadingWorkers(false)
+            }else{
+                setLoadingWorkers(false)
+            }
             console.log(result.data)
             
         } catch (error) {
@@ -53,8 +63,14 @@ export default function Home() {
 
     const getProfessions = async () =>{
         try {
+            setLoadingProfessions(true)
             const result = await axios.get(Url+'getProfesiones')
-            setProfessions(result.data)
+            if(result.data.success===true){
+                setProfessions(result.data.rows)
+                setLoadingProfessions(false)
+            }else{
+                setLoadingProfessions(false)
+            }
             //console.log(result.data)
             
         } catch (error) {
@@ -63,9 +79,15 @@ export default function Home() {
     }
     const FilterWorkersByProfession = async (id_profesion) =>{
         try {
-            console.log("FilterWorkersByProfession: " + id_profesion)
+            //console.log("FilterWorkersByProfession: " + id_profesion)
+            setLoadingWorkers(true)
             const result = await axios.get(Url+'getWorkersByProfession/'+id_profesion)
-            setWorkers(result.data)
+            if(result.data.success===true){
+                setWorkers(result.data.rows)
+                setLoadingWorkers(false)
+            }else{
+                setLoadingWorkers(false)
+            }
         } catch (error) {
             console.log(error.message);
         }
@@ -92,10 +114,12 @@ export default function Home() {
                 console.log(result.data.error);
                 setShowSpinnerLoader(false)
                 setSolicitudAdded(false)
+                setSolicitudError(true)
             }
         } catch (error) {
             setSolicitudAdded(false)
             setShowSpinnerLoader(false)
+            setSolicitudError(true)
             console.log(error.message);
         }
 
@@ -128,7 +152,16 @@ export default function Home() {
     
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className='home_main_container'>
+        <div className= {LoadingProfessions || LoadingWorkers ? 'home_main_container_spinner' :'home_main_container'}>
+            {
+            LoadingProfessions || LoadingWorkers ?
+            <>
+                <CircularProgress style={{'color': '#F36C0E'}}/>
+                <p style={{marginLeft:"1rem"}}>Cargando...</p>
+            </>
+            :
+            <>
+            
             <div className="buttonGroup">
                 {Professions.map((p, index)=>(
                     <Button key={index} variant="contained" onClick={()=>FilterWorkersByProfession(p.id)}
@@ -190,6 +223,8 @@ export default function Home() {
                 ))
                 }
             </div>
+            </>
+            }
         </div>
         <Modal
           open={openModal}
@@ -218,6 +253,7 @@ export default function Home() {
                             onChange={(value) => setTime(value.get('hour') + ':' + (value.get('minute')))}
                             minTime={dayjs().set('hour', 7).set('minute', 59).set('second', 59)}
                             maxTime={dayjs().set('hour', 17)}
+                            error
                         />
                     </DemoItem> 
                 </Box>
@@ -247,8 +283,22 @@ export default function Home() {
                             <CheckCircleIcon color="success"/>
                         </> 
                     }
-                    {ShowSpinnerLoader && <CircularProgress color="success"/>}
+                    {
+                        SolicitudError &&
+                        <>
+                            <Typography variant="h6" sx={{mr: 1}}>
+                                Ha ocurrido un error procesando su solicitud
+                            </Typography>
+                            <ErrorIcon color="error"/>
+                        </> 
+                    }
+                    {ShowSpinnerLoader && 
+                        <>
+                            <CircularProgress style={{'color': '#F36C0E'}}/>
+                        </>
+                    }
                 </Box>
+
             </Box>
         </Modal>
     </LocalizationProvider>

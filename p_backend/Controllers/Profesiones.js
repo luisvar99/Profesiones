@@ -4,7 +4,7 @@ const getProfesiones = async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM profesiones');
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
-        res.json(result.rows);
+        res.json({rows: result.rows, success:true});
     } catch (error) {
         console.log(error.message);
     }

@@ -1,0 +1,6 @@
+.user_solicitudes_container_spinner{
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -112,7 +112,7 @@ export default function Profile() {
         mb:3
         }}>
         <Typography component="h1" variant="h5">
-            Crear una Cuenta
+            Mis Datos
         </Typography>
         <div style={{width:"30%", margin:"0.5rem 0"}}>
             <img src={UserImage} alt="Error al cargar la imagen" style={{width:"100%", borderRadius:"50%"}}/>

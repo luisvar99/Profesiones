@@ -9,7 +9,7 @@ const getWorkers = async (req, res) => {
         INNER JOIN users u ON u.id = t.id_user
         INNER JOIN profesiones p ON p.id = t.id_profesion`);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
-        res.json(result.rows);
+        res.json({rows: result.rows, success: true});
     } catch (error) {
         console.log(error.message);
     }
@@ -24,7 +24,7 @@ const getWorkersByProfession = async (req, res) => {
         INNER JOIN profesiones p ON p.id = t.id_profesion
         WHERE id_profesion=($1)`,[req.params.id]);
         //console.log("getProfesiones : " + JSON.stringify(result.rows));
-        res.json(result.rows);
+        res.json({rows: result.rows, success: true});
     } catch (error) {
         console.log(error.message);
     }
